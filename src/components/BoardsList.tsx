@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { MdAdd, MdClose } from "react-icons/md";
+import { twMerge } from "tailwind-merge";
 
 const BoardsList = ({ isBoardsList }) => {
   const [isNewBoard, setIsNewBoard] = useState(false);
@@ -11,18 +12,21 @@ const BoardsList = ({ isBoardsList }) => {
     <div className="absolute top-[70px] left-0 pr-2 overflow-hidden flex">
       <div className="w-[340px] h-[calc(100vh-70px)] container-main rounded-none">
         <div className="flex items-center h-20">
-          {!isNewBoard && (
-            <button
-              type="button"
-              onClick={() => {
-                setIsNewBoard(true);
-              }}
-              className="flex items-center duration-300 hover:bg-darkWhite ml-auto mr-auto border w-full justify-center py-2 rounded-custom"
-            >
-              Add column
-              <MdAdd className="ml-1 rounded-custom w-7 h-7 flex justify-center items-center" />
-            </button>
-          )}
+          <button
+            type="button"
+            onClick={() => {
+              setIsNewBoard(true);
+            }}
+            className={twMerge(
+              isNewBoard
+                ? "user text-lightGray select-none cursor-auto"
+                : "hover:bg-darkWhite",
+              "flex items-center duration-300 ml-auto mr-auto border w-full justify-center py-2 rounded-custom"
+            )}
+          >
+            New board
+            <MdAdd className="ml-1 rounded-custom w-7 h-7 flex justify-center items-center" />
+          </button>
         </div>
       </div>
       {isNewBoard && (
