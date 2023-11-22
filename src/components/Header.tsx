@@ -12,12 +12,12 @@ const Header = ({ isBoardsList, onToggleBoardsList }) => {
         {!isBoardsList ? (
           <>
             My boards
-            <MdFormatListBulleted className="ml-1 flex justify-center items-center text-xl" />
+            <MdFormatListBulleted className="ml-1 flex justify-center items-center text-xl text-accent" />
           </>
         ) : (
           <>
             Close
-            <MdClose className="ml-1 flex justify-center items-center text-xl" />
+            <MdClose className="ml-1 flex justify-center items-center text-xl text-accent" />
           </>
         )}
       </button>

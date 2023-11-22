@@ -25,7 +25,7 @@ const BoardsList = ({ isBoardsList }) => {
             )}
           >
             New board
-            <MdAdd className="ml-1 rounded-custom w-7 h-7 flex justify-center items-center" />
+            <MdAdd className="ml-1 rounded-custom w-7 h-7 flex justify-center items-center text-accent" />
           </button>
         </div>
       </div>
