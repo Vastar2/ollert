@@ -5,15 +5,26 @@ import { twMerge } from "tailwind-merge";
 
 interface BoardsListProps {
   isBoardsList: boolean;
+  onToggleBoardsList: () => void;
 }
 
-const BoardsList: FC<BoardsListProps> = ({ isBoardsList }) => {
+const BoardsList: FC<BoardsListProps> = ({
+  isBoardsList,
+  onToggleBoardsList,
+}) => {
   const [isNewBoard, setIsNewBoard] = useState(false);
 
   if (!isBoardsList) return null;
 
   return (
-    <div className="absolute top-[70px] left-0 w-full h-[calc(100vh-70px)] bg-[#00000040]">
+    <div
+      className="absolute top-[70px] left-0 w-full h-[calc(100vh-70px)] bg-[#00000040]"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          onToggleBoardsList();
+        }
+      }}
+    >
       <div className="absolute top-0 left-0 pr-2 overflow-hidden flex">
         <div className="w-[340px] h-[calc(100vh-70px)] container-main rounded-none">
           <div className="flex items-center h-20">

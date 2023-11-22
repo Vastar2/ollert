@@ -54,3 +54,19 @@ body {
   background: linear-gradient(to bottom, var(--dark-white), #f5f5f5)
     var(--dark-white);
 }
+
+::-webkit-scrollbar {
+  width: 3px;
+  background-color: transparent;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--light-gray);
+  border-radius: 43x;
+}

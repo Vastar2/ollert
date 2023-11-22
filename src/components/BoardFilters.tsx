@@ -1,8 +1,8 @@
-import { MdEdit, MdStar, MdStarBorder, MdAdd } from "react-icons/md";
+import { MdEdit, MdStar, MdAdd } from "react-icons/md";
 
 const BoardFilters = () => {
   return (
-    <div className="container-main w-[calc(100%-728px)] ml-auto mr-auto flex justify-between py-4">
+    <div className="container-main w-[440px] ml-auto mr-auto flex items-center justify-between mb-6 h-[70px] py-0">
       <div className="flex items-center">
         <button className="mr-4 duration-300 hover:bg-darkWhite rounded-custom w-7 h-7 flex justify-center items-center text-lightGray">
           <MdStar className="text-2xl text-[orange]" />
