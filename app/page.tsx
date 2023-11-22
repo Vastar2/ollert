@@ -14,7 +14,10 @@ const App = () => {
         onToggleBoardsList={() => setIsBoardsList(!isBoardsList)}
       />
       <Board />
-      <BoardsList isBoardsList={isBoardsList} />
+      <BoardsList
+        isBoardsList={isBoardsList}
+        onToggleBoardsList={() => setIsBoardsList(!isBoardsList)}
+      />
     </div>
   );
 };

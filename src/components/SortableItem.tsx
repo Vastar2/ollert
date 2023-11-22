@@ -14,7 +14,7 @@ interface SortableItemProps {
 
 const SortableItem: FC<SortableItemProps> = (props) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: props.item.id });
+    useSortable({ id: props.item.id, animateLayoutChanges: () => false });
 
   const style: React.CSSProperties = {
     transform: CSS.Transform.toString(transform),

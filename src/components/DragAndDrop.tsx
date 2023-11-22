@@ -66,7 +66,7 @@ const DragAndDrop: FC<DragAndDropProps> = ({
             return (
               <div
                 key={index}
-                className="min-h-full h-[calc(100vh-212px)] mr-4 last-of-type:mr-0 pt-4 p-2 container-main"
+                className="min-h-full h-[calc(100vh-224px)] mr-4 last-of-type:mr-0 pt-4 p-2 container-main"
               >
                 <div className="flex items-center justify-center gap-2 mb-3">
                   <span

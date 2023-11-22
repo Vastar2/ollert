@@ -1,19 +1,34 @@
 "use client";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { MdAdd, MdClose } from "react-icons/md";
 import { twMerge } from "tailwind-merge";
 
 interface BoardsListProps {
   isBoardsList: boolean;
+  onToggleBoardsList: () => void;
 }
 
-const BoardsList: FC<BoardsListProps> = ({ isBoardsList }) => {
+const BoardsList: FC<BoardsListProps> = ({
+  isBoardsList,
+  onToggleBoardsList,
+}) => {
   const [isNewBoard, setIsNewBoard] = useState(false);
+
+  useEffect(() => {
+    setIsNewBoard(false);
+  }, [isBoardsList]);
 
   if (!isBoardsList) return null;
 
   return (
-    <div className="absolute top-[70px] left-0 w-full h-[calc(100vh-70px)] bg-[#00000040]">
+    <div
+      className="absolute top-[70px] left-0 w-full h-[calc(100vh-70px)] bg-[#00000040]"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          onToggleBoardsList();
+        }
+      }}
+    >
       <div className="absolute top-0 left-0 pr-2 overflow-hidden flex">
         <div className="w-[340px] h-[calc(100vh-70px)] container-main rounded-none">
           <div className="flex items-center h-20">
@@ -43,8 +58,8 @@ const BoardsList: FC<BoardsListProps> = ({ isBoardsList }) => {
           <div className="overflow-hidden pr-2 mt-6">
             <div className="round-down absolute left[340px] top-[10px]"></div>
             <div className="w-[340px] h-[168px] container-main rounded-l-none relative pt-5">
-              <label htmlFor="">
-                <p className="text-lightGray">Board name</p>
+              <label>
+                <p>Board name</p>
                 <input
                   className="mt-2 w-full block mb-4 py-2 px-4 border border-lightGray rounded-custom"
                   type="text"
