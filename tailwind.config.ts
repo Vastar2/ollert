@@ -26,6 +26,8 @@ const config: Config = {
         darkWhite: "var(--dark-white)",
         mainGray: "var(--main-gray)",
         lightGray: "var(--light-gray)",
+        halfLightGray: "#767676",
+        superLightGray: "#dbdbdb",
         accent: "var(--accent)",
         accentHover: "var(--accent-hover)",
       },

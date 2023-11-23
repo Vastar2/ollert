@@ -22,7 +22,7 @@ const BoardsList: FC<BoardsListProps> = ({
 
   return (
     <div
-      className="absolute top-[70px] left-0 w-full h-[calc(100vh-70px)] bg-[#00000040]"
+      className="absolute z-50 top-[70px] left-0 w-full h-[calc(100vh-70px)] bg-[#00000040]"
       onClick={(e) => {
         if (e.target === e.currentTarget) {
           onToggleBoardsList();
@@ -57,11 +57,11 @@ const BoardsList: FC<BoardsListProps> = ({
         {isNewBoard && (
           <div className="overflow-hidden pr-2 mt-6">
             <div className="round-down absolute left[340px] top-[10px]"></div>
-            <div className="w-[340px] h-[168px] container-main rounded-l-none relative pt-5">
+            <div className="w-[340px] h-[186px] container-main rounded-l-none relative pt-5">
               <label>
                 <p>Board name</p>
                 <input
-                  className="mt-2 w-full block mb-4 py-2 px-4 border border-lightGray rounded-custom"
+                  className="mt-3 w-full block mb-5 py-2 px-4 border border-lightGray rounded-custom"
                   type="text"
                 />
               </label>
@@ -83,6 +83,7 @@ const BoardsList: FC<BoardsListProps> = ({
         )}
       </div>
       <div className="round-up absolute left-[340px]"></div>
+      <div className="round-down absolute left-[340px] -bottom-[15px] bg-red-300"></div>
     </div>
   );
 };

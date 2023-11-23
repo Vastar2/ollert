@@ -1,16 +1,30 @@
 import { MdEdit, MdStar, MdStarBorder, MdAdd } from "react-icons/md";
+import { FC } from "react";
 
-const BoardFilters = () => {
+interface BoardFiltersProps {
+  isFavorite: boolean;
+  boardName: string;
+}
+
+const BoardFilters: FC<BoardFiltersProps> = ({ isFavorite, boardName }) => {
   return (
-    <div className="container-main w-[calc(100%-728px)] ml-auto mr-auto flex justify-between py-4 mb-6">
+    <div className="container-main max-w-[640px] ml-auto mr-auto flex items-center justify-between h-[70px] mb-6">
       <div className="flex items-center">
-        <button className="mr-4 duration-300 hover:bg-darkWhite rounded-custom w-7 h-7 flex justify-center items-center text-lightGray">
-          <MdStar className="text-2xl text-[orange]" />
+        <button
+          // onClick={}
+          type="button"
+          className="mr-4 butoton-small"
+        >
+          {isFavorite ? (
+            <MdStar className="text-2xl text-[orange]" />
+          ) : (
+            <MdStarBorder className="text-2xl" />
+          )}
         </button>
         <p className="mr-2 text-2xl font-[600] underline decoration-accent">
-          EZUI
+          {boardName}
         </p>
-        <button className="duration-300 hover:bg-darkWhite rounded-custom w-7 h-7 flex justify-center items-center text-lightGray mr-1">
+        <button className="butoton-small mr-1">
           <MdEdit className="text-xl" />
         </button>
       </div>

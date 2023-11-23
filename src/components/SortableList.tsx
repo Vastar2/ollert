@@ -4,16 +4,24 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { useDroppable } from "@dnd-kit/core";
-import { ItemField, Task } from "../types";
+import { ItemField, Task, TColumn } from "../types";
 import ListOfItems from "./ListOfItems";
 
 interface SortableListProps {
   items: Task[];
   id: string;
   itemField: ItemField;
+  columns: TColumn[];
+  onSetCurrentTaskData: (taskData: Task | null) => void;
 }
 
-const SortableList: FC<SortableListProps> = ({ items, id, itemField }) => {
+const SortableList: FC<SortableListProps> = ({
+  items,
+  id,
+  itemField,
+  columns,
+  onSetCurrentTaskData,
+}) => {
   const { setNodeRef } = useDroppable({
     id,
   });
@@ -27,11 +35,23 @@ const SortableList: FC<SortableListProps> = ({ items, id, itemField }) => {
       >
         {!items.length ? (
           <div ref={setNodeRef}>
-            <ListOfItems items={items} id={id} itemField={itemField} />
+            <ListOfItems
+              items={items}
+              id={id}
+              itemField={itemField}
+              columns={columns}
+              onSetCurrentTaskData={onSetCurrentTaskData}
+            />
           </div>
         ) : (
           <>
-            <ListOfItems items={items} id={id} itemField={itemField} />
+            <ListOfItems
+              items={items}
+              id={id}
+              itemField={itemField}
+              columns={columns}
+              onSetCurrentTaskData={onSetCurrentTaskData}
+            />
           </>
         )}
       </SortableContext>

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import type { ItemField, Task } from "../types";
+import type { ItemField, Task, TColumn } from "../types";
 
 interface UseGetItemsProps {
-  columns: string[];
+  columns: TColumn[];
   itemsOriginal: Task[];
   itemField: ItemField;
 }
@@ -14,7 +14,7 @@ export const useGetItems = ({
 }: UseGetItemsProps) => {
   const [items, setItems] = useState<Record<string, Task[]>>();
 
-  const [statuses] = useState<string[]>(columns);
+  const [statuses] = useState<string[]>(columns.map((item) => item.name));
 
   useEffect(() => {
     const getItems = () => {

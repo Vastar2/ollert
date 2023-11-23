@@ -4,6 +4,16 @@ export interface Task {
   title: string;
   description: string;
   status: string;
-  priority: string;
+}
+export interface TColumn {
+  name: string;
+  color: string;
 }
 export type ItemField = Exclude<keyof Task, "id">;
+
+export interface TBoardData {
+  boardName: string;
+  isFavorite: boolean;
+  columns: TColumn[];
+  array: Task[];
+}

@@ -16,8 +16,6 @@ export const handleDragOver = (
   const id = active?.id;
   const overId = over?.id;
 
-  console.log("id, overId", id, overId);
-
   if (!overId) return;
   if (!items) return;
 

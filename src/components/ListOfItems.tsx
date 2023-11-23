@@ -1,25 +1,39 @@
 import { FC } from "react";
-import { DragOverlay } from "@dnd-kit/core";
 import SortableItem from "./SortableItem";
-import { AiOutlinePlus } from "react-icons/ai";
-import { ItemField, Task } from "../types";
+import { TbDragDrop } from "react-icons/tb";
+import { ItemField, Task, TColumn } from "../types";
 
 interface SortableListProps {
   items: Task[];
   id: string;
   itemField: ItemField;
+  columns: TColumn[];
+  onSetCurrentTaskData: (taskData: Task | null) => void;
 }
 
-const ListOfItems: FC<SortableListProps> = ({ items, id, itemField }) => {
+const ListOfItems: FC<SortableListProps> = ({
+  items,
+  id,
+  itemField,
+  columns,
+  onSetCurrentTaskData,
+}) => {
   return (
     <>
       {items.length ? (
         items.map((item, index) => (
-          <SortableItem key={index} item={item} id={id} itemField={itemField} />
+          <SortableItem
+            key={index}
+            item={item}
+            id={id}
+            itemField={itemField}
+            columns={columns}
+            onSetCurrentTaskData={onSetCurrentTaskData}
+          />
         ))
       ) : (
-        <div className="border w-full py-8 rounded-custom bg-gray-50 flex justify-center items-center">
-          <AiOutlinePlus className="text-lightGray w-8 h-8" />
+        <div className="border w-full py-8 h-[146px] rounded-custom bg-gray-50 flex justify-center items-center">
+          <TbDragDrop className="text-lightGray text-4xl" />
         </div>
       )}
     </>
