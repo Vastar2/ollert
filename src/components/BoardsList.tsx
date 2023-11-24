@@ -13,9 +13,11 @@ const BoardsList: FC<BoardsListProps> = ({
   onToggleBoardsList,
 }) => {
   const [isNewBoard, setIsNewBoard] = useState(false);
+  const [boardName, setBoardName] = useState("");
 
   useEffect(() => {
     setIsNewBoard(false);
+    setBoardName("");
   }, [isBoardsList]);
 
   if (!isBoardsList) return null;
@@ -57,28 +59,41 @@ const BoardsList: FC<BoardsListProps> = ({
         <div className="overflow-hidden pr-2 mt-6">
           <div className="round-down absolute left[340px] top-[10px]"></div>
           {isNewBoard ? (
-            <div className="w-[340px] h-[186px] container-main rounded-l-none relative pt-5">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                // Створення нової дошки
+                console.log(boardName);
+              }}
+              className="w-[340px] h-[186px] container-main rounded-l-none relative pt-5"
+            >
               <label>
                 <p>Board name</p>
                 <input
                   className="mt-3 w-full block mb-5 py-2 px-4 border border-lightGray rounded-custom focus:outline focus:outline-1 focus:outline-accent"
                   type="text"
+                  value={boardName}
+                  onChange={(e) => setBoardName(e.target.value)}
                   autoFocus
                 />
               </label>
-              <button className="flex items-center duration-300 hover:bg-darkWhite ml-auto mr-auto border border-accent w-full justify-center py-2 rounded-custom text-accent">
+              <button
+                type="submit"
+                className="flex items-center duration-300 hover:bg-darkWhite ml-auto mr-auto border border-accent w-full justify-center py-2 rounded-custom text-accent"
+              >
                 Create
               </button>
               <button
                 className="absolute top-4 right-4 text-xl text-lightGray duration-300 hover:text-mainGray"
                 onClick={() => {
                   setIsNewBoard(false);
+                  setBoardName("");
                 }}
                 type="button"
               >
                 <MdClose />
               </button>
-            </div>
+            </form>
           ) : (
             <div className="w-[30px] h-[186px] container-main rounded-l-none rounded-r-xl relative p-0">
               <button

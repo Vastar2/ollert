@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { ItemField, Task, TColumn } from "../types";
+import type { Task, TColumn } from "../types";
 
 interface UseGetItemsProps {
   columns: TColumn[];

@@ -50,7 +50,7 @@ const SortableItem: FC<SortableItemProps> = (props) => {
         {props.item.title}
       </p>
       <span
-        className={`inline-block font-normal rounded-custom px-1.5 py-1 text-xs mb-3`}
+        className={`inline-block font-normal rounded-custom px-1.5 py-1 text-xs mb-2`}
         style={{
           backgroundColor: `${
             props.columns.filter((item) => item.name === props.id)[0].color

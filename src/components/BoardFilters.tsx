@@ -50,7 +50,13 @@ const BoardFilters: FC<BoardFiltersProps> = ({
             </button>
           </>
         ) : (
-          <div className="flex">
+          <form
+            className="flex"
+            onSubmit={() => {
+              setEditedBoardName("");
+              onChangeName(editedBoardName);
+            }}
+          >
             <input
               type="text"
               value={editedBoardName}
@@ -59,16 +65,12 @@ const BoardFilters: FC<BoardFiltersProps> = ({
               autoFocus
             />
             <button
-              onClick={() => {
-                setEditedBoardName("");
-                onChangeName(editedBoardName);
-              }}
-              type="button"
+              type="submit"
               className="w-[42px] h-[42px] flex justify-center items-center rounded-r-custom border border-l-0 duration-300 hover:bg-darkWhite"
             >
               <MdOutlineDone className="text-accent text-2xl" />
             </button>
-          </div>
+          </form>
         )}
       </div>
       <div>
