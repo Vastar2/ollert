@@ -10,7 +10,7 @@ interface SortableItemProps {
   id: string;
   itemField: ItemField;
   columns: TColumn[];
-  onSetCurrentTaskData: (taskData: Task | null) => void;
+  onSetCurrentTaskData: (taskData: Task | null, color: string) => void;
 }
 
 const SortableItem: FC<SortableItemProps> = (props) => {
@@ -31,7 +31,12 @@ const SortableItem: FC<SortableItemProps> = (props) => {
       className={twMerge(
         "text-lg border bg-gray-50 rounded-custom p-3 pt-4 mb-2  last-of-type:mb-0 relative z-[40] overflow-hidden"
       )}
-      onClick={() => props.onSetCurrentTaskData(props.item)}
+      onClick={() =>
+        props.onSetCurrentTaskData(
+          props.item,
+          props.columns.filter((item) => item.name === props.id)[0].color
+        )
+      }
     >
       <div
         className="h-2 w-full absolute top-0 left-0"

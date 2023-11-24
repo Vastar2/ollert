@@ -4,6 +4,7 @@ export interface Task {
   title: string;
   description: string;
   status: string;
+  color?: string;
 }
 export interface TColumn {
   name: string;

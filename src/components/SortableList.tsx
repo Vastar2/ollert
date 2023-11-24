@@ -12,7 +12,7 @@ interface SortableListProps {
   id: string;
   itemField: ItemField;
   columns: TColumn[];
-  onSetCurrentTaskData: (taskData: Task | null) => void;
+  onSetCurrentTaskData: (taskData: Task | null, color: string) => void;
 }
 
 const SortableList: FC<SortableListProps> = ({

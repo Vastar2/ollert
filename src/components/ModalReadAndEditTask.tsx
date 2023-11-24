@@ -3,15 +3,15 @@ import { Task } from "../types";
 import { MdEdit, MdClose } from "react-icons/md";
 
 interface ModalReadAndEditTaskProps {
-  curentTaskData: null | Task;
+  currentTaskData: null | Task;
   resetTaskModal: () => void;
 }
 
 const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
-  curentTaskData,
+  currentTaskData,
   resetTaskModal,
 }) => {
-  if (!curentTaskData) return null;
+  if (!currentTaskData) return null;
 
   return (
     <div
@@ -24,27 +24,37 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
     >
       <div className="basis-[640px] container-main pt-16 relative overflow-hidden">
         <div className="w-full absolute top-0 left-0">
-          <div className="w-full h-2 bg-darkWhite"></div>
-          <div className="inline-block px-4 py-1 rounded-br-custom bg-darkWhite">
-            <p className="text-halfLightGray">{curentTaskData.status}</p>
+          <div
+            className="w-full h-2"
+            style={{
+              backgroundColor: `${currentTaskData.color}`,
+            }}
+          ></div>
+          <div
+            className="inline-block px-4 py-1 rounded-br-custom"
+            style={{
+              backgroundColor: `${currentTaskData.color}30`,
+            }}
+          >
+            <p className="text-halfLightGray">{currentTaskData.status}</p>
           </div>
         </div>
         <p className="font-semibold text-lg whitespace-nowrap text-ellipsis overflow-hidden mb-3">
-          {curentTaskData.title}
+          {currentTaskData.title}
         </p>
         <p className="text-base text-halfLightGray">
-          {curentTaskData.description}
+          {currentTaskData.description}
         </p>
         <div className="absolute top-4 right-3 flex gap-1">
           <button
-            className="text-lg butoton-small"
+            className="text-lg button-small"
             // onClick={}
             type="button"
           >
             <MdEdit />
           </button>
           <button
-            className="text-xl butoton-small"
+            className="text-xl button-small"
             onClick={resetTaskModal}
             type="button"
           >

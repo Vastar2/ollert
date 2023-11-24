@@ -1,4 +1,5 @@
-import { FC } from "react";
+"use client";
+import { FC, useEffect } from "react";
 import {
   DndContext,
   closestCenter,
@@ -32,9 +33,11 @@ export interface DragAndDropProps {
       React.SetStateAction<Record<string, Task[]> | undefined>
     >,
     arrayMove: (arr: Task[], from: number, to: number) => Task[],
-    itemField: ItemField
+    itemField: ItemField,
+    onChangeResultArray: any
   ) => void;
-  onSetCurrentTaskData: (taskData: Task | null) => void;
+  onSetCurrentTaskData: (taskData: Task | null, color: string) => void;
+  onChangeResultArray: (newArray: any) => void;
 }
 
 const DragAndDrop: FC<DragAndDropProps> = ({
@@ -44,11 +47,11 @@ const DragAndDrop: FC<DragAndDropProps> = ({
   onChangeOver,
   onChangeEnd,
   onSetCurrentTaskData,
+  onChangeResultArray,
 }) => {
   const { items, setItems } = useGetItems({
     columns,
     itemsOriginal,
-    itemField,
   });
   const sensors = useDefaultSensors();
 
@@ -59,7 +62,14 @@ const DragAndDrop: FC<DragAndDropProps> = ({
         collisionDetection={closestCenter}
         onDragOver={(event) => onChangeOver(event, setItems, items ?? {})}
         onDragEnd={(event) =>
-          onChangeEnd(event, items as ItemsType, setItems, arrayMove, itemField)
+          onChangeEnd(
+            event,
+            items as ItemsType,
+            setItems,
+            arrayMove,
+            itemField,
+            onChangeResultArray
+          )
         }
       >
         {!!items &&
@@ -101,7 +111,7 @@ const DragAndDrop: FC<DragAndDropProps> = ({
                 <button
                   // onClick={}
                   type="button"
-                  className="absolute top-3.5 right-2 butoton-small"
+                  className="absolute top-3.5 right-2 button-small"
                 >
                   <MdDelete />
                 </button>

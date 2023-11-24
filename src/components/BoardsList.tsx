@@ -31,7 +31,7 @@ const BoardsList: FC<BoardsListProps> = ({
     >
       <div className="absolute top-0 left-0 pr-2 overflow-hidden flex">
         <div className="w-[340px] h-[calc(100vh-70px)] container-main rounded-none">
-          <div className="flex items-center h-20">
+          {/* <div className="flex items-center h-20">
             <button
               type="button"
               onClick={() => {
@@ -52,20 +52,21 @@ const BoardsList: FC<BoardsListProps> = ({
                 )}
               />
             </button>
-          </div>
+          </div> */}
         </div>
-        {isNewBoard && (
-          <div className="overflow-hidden pr-2 mt-6">
-            <div className="round-down absolute left[340px] top-[10px]"></div>
+        <div className="overflow-hidden pr-2 mt-6">
+          <div className="round-down absolute left[340px] top-[10px]"></div>
+          {isNewBoard ? (
             <div className="w-[340px] h-[186px] container-main rounded-l-none relative pt-5">
               <label>
                 <p>Board name</p>
                 <input
-                  className="mt-3 w-full block mb-5 py-2 px-4 border border-lightGray rounded-custom"
+                  className="mt-3 w-full block mb-5 py-2 px-4 border border-lightGray rounded-custom focus:outline focus:outline-1 focus:outline-accent"
                   type="text"
+                  autoFocus
                 />
               </label>
-              <button className="flex items-center duration-300 hover:bg-darkWhite ml-auto mr-auto border border-mainGray w-full justify-center py-2 rounded-custom">
+              <button className="flex items-center duration-300 hover:bg-darkWhite ml-auto mr-auto border border-accent w-full justify-center py-2 rounded-custom text-accent">
                 Create
               </button>
               <button
@@ -78,9 +79,21 @@ const BoardsList: FC<BoardsListProps> = ({
                 <MdClose />
               </button>
             </div>
-            <div className="round-up absolute left[340px]"></div>
-          </div>
-        )}
+          ) : (
+            <div className="w-[30px] h-[186px] container-main rounded-l-none rounded-r-xl relative p-0">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsNewBoard(true);
+                }}
+                className="w-full h-full flex justify-center items-center text-accent rounded-xl duration-300 hover:bg-darkWhite"
+              >
+                <MdAdd className="rounded-custom w-6 h-6 relative -left-0.5 flex justify-center items-center" />
+              </button>
+            </div>
+          )}
+          <div className="round-up absolute left[340px]"></div>
+        </div>
       </div>
       <div className="round-up absolute left-[340px]"></div>
       <div className="round-down absolute left-[340px] -bottom-[15px] bg-red-300"></div>

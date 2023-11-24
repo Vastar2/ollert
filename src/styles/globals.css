@@ -6,7 +6,7 @@
   .container-main {
     @apply bg-mainWhite rounded-custom shadow-custom py-5 px-4;
   }
-  .butoton-small {
+  .button-small {
     @apply duration-300 hover:bg-darkWhite rounded-custom w-7 h-7 flex justify-center items-center text-lightGray;
   }
   /* .container-light {
