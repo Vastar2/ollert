@@ -22,7 +22,7 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
         }
       }}
     >
-      <div className="basis-[640px] container-main pt-16 relative overflow-hidden">
+      <div className="basis-[540px] container-main pt-16 relative overflow-hidden">
         <div className="w-full absolute top-0 left-0">
           <div
             className="w-full h-2"

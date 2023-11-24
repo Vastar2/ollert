@@ -38,6 +38,7 @@ export interface DragAndDropProps {
   ) => void;
   onSetCurrentTaskData: (taskData: Task | null, color: string) => void;
   onChangeResultArray: (newArray: any) => void;
+  onNewtask: (key: string, color: string) => void;
 }
 
 const DragAndDrop: FC<DragAndDropProps> = ({
@@ -48,6 +49,7 @@ const DragAndDrop: FC<DragAndDropProps> = ({
   onChangeEnd,
   onSetCurrentTaskData,
   onChangeResultArray,
+  onNewtask,
 }) => {
   const { items, setItems } = useGetItems({
     columns,
@@ -88,9 +90,7 @@ const DragAndDrop: FC<DragAndDropProps> = ({
                       }60`,
                     }}
                   ></div>
-                  <p className="font-[600] text-xl">
-                    {key.charAt(0).toUpperCase() + key.slice(1)}
-                  </p>
+                  <p className="font-[600] text-xl">{key}</p>
                 </div>
                 <SortableList
                   items={value}
@@ -99,10 +99,14 @@ const DragAndDrop: FC<DragAndDropProps> = ({
                   columns={columns}
                   onSetCurrentTaskData={onSetCurrentTaskData}
                 />
-
                 <button
                   type="button"
-                  // onClick={}
+                  onClick={() =>
+                    onNewtask(
+                      key,
+                      columns.filter((item) => item.name === key)[0].color
+                    )
+                  }
                   className="flex items-center duration-300 ml-auto mr-auto border w-full justify-center py-2 rounded-custom hover:bg-darkWhite mt-4"
                 >
                   New task
