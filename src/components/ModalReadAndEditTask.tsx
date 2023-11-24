@@ -38,7 +38,7 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
         <div className="absolute top-4 right-3 flex gap-1">
           <button
             className="text-lg butoton-small"
-            onClick={resetTaskModal}
+            // onClick={}
             type="button"
           >
             <MdEdit />

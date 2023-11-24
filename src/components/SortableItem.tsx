@@ -41,7 +41,7 @@ const SortableItem: FC<SortableItemProps> = (props) => {
           )[0].color,
         }}
       ></div>
-      <p className="font-semibold text-lg whitespace-nowrap text-ellipsis overflow-hidden w-[200px]">
+      <p className="font-semibold text-lg whitespace-nowrap text-ellipsis overflow-hidden w-[210px]">
         {props.item.title}
       </p>
       <span
@@ -54,7 +54,14 @@ const SortableItem: FC<SortableItemProps> = (props) => {
       >
         {props.item[props.itemField]}
       </span>
-      <p className="text-base text-halfLightGray h-[48px] text-ellipsis overflow-hidden">
+      <p
+        className="text-base text-halfLightGray h-[48px] text-ellipsis overflow-hidden"
+        style={{
+          display: "-webkit-box",
+          WebkitBoxOrient: "vertical",
+          WebkitLineClamp: 2,
+        }}
+      >
         {props.item.description}
       </p>
       <RxDragHandleDots1 className="text-3xl absolute top-4 right-1 text-superLightGray" />
