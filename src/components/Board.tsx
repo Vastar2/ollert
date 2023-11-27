@@ -63,7 +63,7 @@ const Board: FC<BoardProps> = () => {
               onChangeOver={handleDragOver}
               onChangeEnd={handleDragEnd}
               onSetCurrentTaskData={(taskData, color) =>
-                setCurrentTaskData({ ...taskData, color })
+                taskData && setCurrentTaskData({ ...taskData, color })
               }
               onChangeResultArray={(newArray) =>
                 setBoardData((prev: any) => ({
@@ -81,6 +81,31 @@ const Board: FC<BoardProps> = () => {
       <ModalReadAndEditTask
         currentTaskData={currentTaskData}
         resetTaskModal={() => setCurrentTaskData(null)}
+        onUpdateTask={(id, taskName, taskDescription, status) => {
+          setBoardData((prev: any) => ({
+            ...prev,
+            array: [
+              ...prev.array.slice(
+                0,
+                prev.array.findIndex((item: any) => item.id === id)
+              ),
+              {
+                id,
+                title: taskName,
+                description: taskDescription,
+                status,
+              },
+              ...prev.array.slice(
+                prev.array.findIndex((item: any) => item.id === id) + 1,
+                prev.array.length
+              ),
+            ],
+          }));
+          setCurrentTaskData(
+            (prev) =>
+              prev && { ...prev, title: taskName, description: taskDescription }
+          );
+        }}
       />
       <ModalCreateTask
         newTaskStatus={newTaskStatus}

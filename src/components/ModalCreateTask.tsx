@@ -68,7 +68,7 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
             <label>
               Task name
               <input
-                className="mt-3 w-full block mb-5 py-2 px-4 border border-lightGray rounded-custom focus:outline focus:outline-1 focus:outline-accent"
+                className="mt-3 mb-5 input-main"
                 type="text"
                 value={taskName}
                 onChange={(e) => setTaskName(e.target.value)}
@@ -79,7 +79,7 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
             <label>
               Task description
               <textarea
-                className="mt-3 w-full block mb-5 py-2 px-4 border border-lightGray rounded-custom focus:outline focus:outline-1 focus:outline-accent"
+                className="mt-3 h-[140px] resize-none mb-5 input-main"
                 value={taskDescription}
                 onChange={(e) => setTaskDescription(e.target.value)}
               />

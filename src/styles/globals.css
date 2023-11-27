@@ -9,6 +9,9 @@
   .button-small {
     @apply duration-300 hover:bg-darkWhite rounded-custom w-7 h-7 flex justify-center items-center text-lightGray;
   }
+  .input-main {
+    @apply w-full block py-2 px-4 border border-lightGray rounded-custom focus:outline focus:border-accent outline-none;
+  }
   /* .container-light {
     @apply;
   } */
@@ -53,6 +56,7 @@
   animation: l9-0 1.5s infinite steps(1) alternate,
     l9-0-0 3s infinite steps(1) alternate;
 }
+
 .loader::before {
   content: "";
   background: currentColor;

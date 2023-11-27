@@ -65,12 +65,12 @@ const BoardsList: FC<BoardsListProps> = ({
                 // Створення нової дошки
                 console.log(boardName);
               }}
-              className="w-[340px] h-[186px] container-main rounded-l-none relative pt-5"
+              className="w-[340px] h-[168px] container-main rounded-l-none relative pt-5"
             >
               <label>
-                <p>Board name</p>
+                <p className="text-sm text-lightGray">Board name</p>
                 <input
-                  className="mt-3 w-full block mb-5 py-2 px-4 border border-lightGray rounded-custom focus:outline focus:outline-1 focus:outline-accent"
+                  className="mt-2 mb-4 input-main"
                   type="text"
                   value={boardName}
                   onChange={(e) => setBoardName(e.target.value)}

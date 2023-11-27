@@ -1,16 +1,32 @@
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { Task } from "../types";
-import { MdEdit, MdClose } from "react-icons/md";
+import { MdEdit, MdClose, MdOutlineDone } from "react-icons/md";
 
 interface ModalReadAndEditTaskProps {
   currentTaskData: null | Task;
   resetTaskModal: () => void;
+  onUpdateTask: (
+    id: number,
+    editText: string,
+    editDescription: string,
+    status: string
+  ) => void;
 }
 
 const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
   currentTaskData,
   resetTaskModal,
+  onUpdateTask,
 }) => {
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editText, setEditText] = useState("");
+  const [editDescription, setEditDescription] = useState("");
+
+  useEffect(() => {
+    setEditText(currentTaskData?.title || "");
+    setEditDescription(currentTaskData?.description || "");
+  }, [currentTaskData?.description, currentTaskData?.title]);
+
   if (!currentTaskData) return null;
 
   return (
@@ -19,6 +35,7 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
       onClick={(e) => {
         if (e.target === e.currentTarget) {
           resetTaskModal();
+          setIsEditMode(false);
         }
       }}
     >
@@ -39,23 +56,70 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
             <p className="text-halfLightGray">{currentTaskData.status}</p>
           </div>
         </div>
-        <p className="font-semibold text-lg whitespace-nowrap text-ellipsis overflow-hidden mb-3">
-          {currentTaskData.title}
-        </p>
-        <p className="text-base text-halfLightGray">
-          {currentTaskData.description}
-        </p>
-        <div className="absolute top-4 right-3 flex gap-1">
+        {isEditMode ? (
+          <label className="block mb-3">
+            <p className="text-sm text-lightGray mb-1">Title</p>
+            <input
+              type="text"
+              value={editText}
+              className="input-main"
+              onChange={(e) => {
+                setEditText(e.target.value);
+              }}
+            />
+          </label>
+        ) : (
+          <p className="font-semibold text-lg whitespace-nowrap text-ellipsis overflow-hidden mb-3">
+            {currentTaskData.title}
+          </p>
+        )}
+        {isEditMode ? (
+          <label className="block">
+            <p className="text-sm text-lightGray mb-1">Description</p>
+            <textarea
+              value={editDescription}
+              className="block h-[140px] resize-none input-main"
+              onChange={(e) => {
+                setEditDescription(e.target.value);
+              }}
+            />
+          </label>
+        ) : (
+          <p className="text-base text-halfLightGray">
+            {currentTaskData.description}
+          </p>
+        )}
+        <div className="absolute top-4 right-3 flex items-center">
+          {isEditMode && (
+            <p className="text-sm text-lightGray italic">Edit mode</p>
+          )}
           <button
-            className="text-lg button-small"
-            // onClick={}
+            className="text-lg button-small ml-2"
+            onClick={() => {
+              if (isEditMode) {
+                onUpdateTask(
+                  currentTaskData.id,
+                  editText,
+                  editDescription,
+                  currentTaskData.status
+                );
+              }
+              setIsEditMode(!isEditMode);
+            }}
             type="button"
           >
-            <MdEdit />
+            {isEditMode ? (
+              <MdOutlineDone className="text-accent" />
+            ) : (
+              <MdEdit />
+            )}
           </button>
           <button
-            className="text-xl button-small"
-            onClick={resetTaskModal}
+            className="text-xl button-small ml-1"
+            onClick={() => {
+              resetTaskModal();
+              setIsEditMode(false);
+            }}
             type="button"
           >
             <MdClose />

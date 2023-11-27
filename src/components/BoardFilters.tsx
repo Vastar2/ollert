@@ -4,8 +4,10 @@ import {
   MdStarBorder,
   MdAdd,
   MdOutlineDone,
+  MdClose,
 } from "react-icons/md";
 import { FC, useState } from "react";
+import { twMerge } from "tailwind-merge";
 
 interface BoardFiltersProps {
   isFavorite: boolean | undefined;
@@ -21,6 +23,7 @@ const BoardFilters: FC<BoardFiltersProps> = ({
   onChangeName,
 }) => {
   const [editedBoardName, setEditedBoardName] = useState("");
+  const [newColumnName, setNewColumnName] = useState<null | string>(null);
 
   return (
     <div className="container-main max-w-[640px] ml-auto mr-auto flex items-center justify-between h-[70px] mb-6">
@@ -73,11 +76,53 @@ const BoardFilters: FC<BoardFiltersProps> = ({
           </form>
         )}
       </div>
-      <div>
-        <button className="flex items-center py-2 px-4 duration-300 rounded-custom hover:bg-darkWhite">
-          Add column
-          <MdAdd className="ml-1 duration-300 w-7 h-7 flex justify-center items-center text-accent text-4xl" />
+      <div className="relative">
+        <button
+          onClick={() => setNewColumnName("")}
+          type="button"
+          className={twMerge(
+            newColumnName !== null
+              ? "select-none cursor-default hover:bg-mainWhite opacity-60"
+              : "duration-300 hover:bg-darkWhite",
+            "flex items-center py-2 px-4 rounded-custom"
+          )}
+        >
+          <p>Add column</p>
+          <MdAdd
+            className={twMerge(
+              newColumnName !== null ? "text-mainGray" : "text-accent",
+              "ml-1 duration-300 w-7 h-7 flex justify-center items-center text-4xl"
+            )}
+          />
         </button>
+        {newColumnName !== null && (
+          <div className="absolute mt-6 container-main z-50 w-[220px] -right-4">
+            <label className="block mb-3">
+              <p className="text-sm text-lightGray mb-2">Column name</p>
+              <input
+                type="text"
+                value={newColumnName}
+                className="input-main"
+                onChange={(e) => setNewColumnName(e.target.value)}
+                autoFocus
+              />
+            </label>
+            <button
+              type="button"
+              className="flex items-center duration-300 hover:bg-darkWhite ml-auto mr-auto border border-accent w-full justify-center py-2 rounded-custom text-accent"
+              onClick={() => console.log(newColumnName)}
+            >
+              Create
+            </button>
+            <button
+              className="text-xl button-small ml-1 absolute top-2 right-2"
+              onClick={() => setNewColumnName(null)}
+              type="button"
+            >
+              <MdClose />
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
