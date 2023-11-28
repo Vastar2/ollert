@@ -9,7 +9,13 @@ interface UseGetItemsProps {
 export const useGetItems = ({ columns, itemsOriginal }: UseGetItemsProps) => {
   const [items, setItems] = useState<Record<string, Task[]>>();
 
-  const [statuses] = useState<string[]>(columns?.map((item) => item.name));
+  const [statuses, setStatuses] = useState<string[]>(
+    columns?.map((item) => item.name)
+  );
+
+  useEffect(() => {
+    setStatuses(columns?.map((item) => item.name));
+  }, [columns]);
 
   useEffect(() => {
     const getItems = () => {
@@ -18,11 +24,10 @@ export const useGetItems = ({ columns, itemsOriginal }: UseGetItemsProps) => {
       itemsOriginal?.forEach((item) => {
         resultItems[item["status"]].push(item);
       });
-
       setItems(resultItems);
     };
     getItems();
-  }, [itemsOriginal, statuses]);
+  }, [itemsOriginal, statuses, columns]);
 
   return { items, setItems };
 };

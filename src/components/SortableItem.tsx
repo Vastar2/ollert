@@ -43,7 +43,7 @@ const SortableItem: FC<SortableItemProps> = (props) => {
         style={{
           backgroundColor: props.columns.filter(
             (item) => item.name === props.id
-          )[0].color,
+          )[0]?.color,
         }}
       ></div>
       <p className="font-semibold text-lg whitespace-nowrap text-ellipsis overflow-hidden w-[210px]">
@@ -53,7 +53,7 @@ const SortableItem: FC<SortableItemProps> = (props) => {
         className={`inline-block font-normal rounded-custom px-1.5 py-1 text-xs mb-2`}
         style={{
           backgroundColor: `${
-            props.columns.filter((item) => item.name === props.id)[0].color
+            props.columns.filter((item) => item.name === props.id)[0]?.color
           }30`,
         }}
       >

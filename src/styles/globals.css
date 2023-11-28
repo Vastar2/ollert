@@ -120,3 +120,27 @@ body {
   background: linear-gradient(to bottom, var(--dark-white), #f5f5f5)
     var(--dark-white);
 }
+
+.color-input .react-colorful {
+  padding: 12px;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0px 0px 26px -12px rgba(0, 0, 0, 0.1);
+  height: 38px;
+  max-width: 100%;
+}
+
+.color-input .react-colorful__saturation {
+  display: none;
+}
+
+.color-input .react-colorful__hue {
+  height: 14px;
+  border-radius: 6px;
+}
+
+.color-input .react-colorful__hue-pointer {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}

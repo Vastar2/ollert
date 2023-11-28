@@ -8,6 +8,7 @@ import Loading from "./Loading";
 import dataTemplate from "../data/data.json";
 import { handleDragOver, handleDragEnd } from "../utils/index";
 import type { ItemField, Task, TBoardData } from "../types";
+import { Contrail_One } from "next/font/google";
 
 interface BoardProps {}
 
@@ -35,6 +36,8 @@ const Board: FC<BoardProps> = () => {
     }
   }, [boardData]);
 
+  console.log(boardData);
+
   return (
     <>
       {boardData ? (
@@ -52,6 +55,15 @@ const Board: FC<BoardProps> = () => {
               setBoardData((prev: any) => ({
                 ...prev,
                 boardName: newBoardName,
+              }))
+            }
+            onAddNewColumn={(newColumnName, newColumnColor) =>
+              setBoardData((prev: any) => ({
+                ...prev,
+                columns: [
+                  ...prev.columns,
+                  { name: newColumnName, color: newColumnColor },
+                ],
               }))
             }
           />
@@ -72,6 +84,62 @@ const Board: FC<BoardProps> = () => {
                 }))
               }
               onNewtask={(key, color) => setNewTaskStatus({ key, color })}
+              onDeleteColumn={(status) => {
+                setBoardData((prev: any) => ({
+                  ...prev,
+                  columns: prev.columns.filter((item: any) => {
+                    return item.name !== status;
+                  }),
+                  array: prev.array.filter(
+                    (item: any) => item.status !== status
+                  ),
+                }));
+              }}
+              onChangeColumnColor={(key, newColumnColor) => {
+                setBoardData((prev: any) => ({
+                  ...prev,
+                  columns: [
+                    ...prev.columns.slice(
+                      0,
+                      prev.columns.findIndex((item: any) => item.name === key)
+                    ),
+                    { name: key, color: newColumnColor },
+                    ...prev.columns.slice(
+                      prev.columns.findIndex((item: any) => item.name === key) +
+                        1,
+                      prev.columns.length
+                    ),
+                  ],
+                }));
+              }}
+              onMoveColumn={(key, dirrection) => {
+                setBoardData((prev: any) => {
+                  const resultColumnsArray = [...prev.columns];
+                  const oldIndex = prev.columns.findIndex(
+                    (item: any) => item.name === key
+                  );
+                  const newIndex =
+                    dirrection === "left" ? oldIndex - 1 : oldIndex + 1;
+
+                  if (newIndex >= resultColumnsArray.length) {
+                    var k = newIndex - resultColumnsArray.length + 1;
+                    while (k--) {
+                      resultColumnsArray.push(undefined);
+                    }
+                  }
+
+                  resultColumnsArray.splice(
+                    newIndex,
+                    0,
+                    resultColumnsArray.splice(oldIndex, 1)[0]
+                  );
+
+                  return {
+                    ...prev,
+                    columns: [...resultColumnsArray],
+                  };
+                });
+              }}
             />
           )}
         </div>

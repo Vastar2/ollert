@@ -8,12 +8,14 @@ import {
 } from "react-icons/md";
 import { FC, useState } from "react";
 import { twMerge } from "tailwind-merge";
+import { HexColorPicker } from "react-colorful";
 
 interface BoardFiltersProps {
   isFavorite: boolean | undefined;
   boardName: string | undefined;
   onToggleFavorite: () => void;
   onChangeName: (newBoardName: string) => void;
+  onAddNewColumn: (newColumnName: string, newColumnColor: string) => void;
 }
 
 const BoardFilters: FC<BoardFiltersProps> = ({
@@ -21,9 +23,11 @@ const BoardFilters: FC<BoardFiltersProps> = ({
   boardName,
   onToggleFavorite,
   onChangeName,
+  onAddNewColumn,
 }) => {
   const [editedBoardName, setEditedBoardName] = useState("");
   const [newColumnName, setNewColumnName] = useState<null | string>(null);
+  const [newColumnColor, setNewColumnColor] = useState("#EE4B4B");
 
   return (
     <div className="container-main max-w-[640px] ml-auto mr-auto flex items-center justify-between h-[70px] mb-6">
@@ -107,10 +111,20 @@ const BoardFilters: FC<BoardFiltersProps> = ({
                 autoFocus
               />
             </label>
+            <p className="text-sm text-lightGray mb-2">Column color</p>
+            <div className="mb-3 color-input example border border-1 border-lightGray rounded-custom">
+              <HexColorPicker
+                color={newColumnColor}
+                onChange={setNewColumnColor}
+              />
+            </div>
             <button
               type="button"
               className="flex items-center duration-300 hover:bg-darkWhite ml-auto mr-auto border border-accent w-full justify-center py-2 rounded-custom text-accent"
-              onClick={() => console.log(newColumnName)}
+              onClick={() => {
+                onAddNewColumn(newColumnName, newColumnColor);
+                setNewColumnName(null);
+              }}
             >
               Create
             </button>
