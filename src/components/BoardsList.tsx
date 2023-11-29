@@ -2,6 +2,7 @@
 import { FC, useEffect, useState } from "react";
 import { MdAdd, MdClose } from "react-icons/md";
 import { twMerge } from "tailwind-merge";
+import Link from "next/link";
 
 interface BoardsListProps {
   isBoardsList: boolean;
@@ -22,6 +23,8 @@ const BoardsList: FC<BoardsListProps> = ({
 
   if (!isBoardsList) return null;
 
+  // const boarsIdList = ;
+
   return (
     <div
       className="absolute z-50 top-[70px] left-0 w-full h-[calc(100vh-70px)] bg-[#00000040]"
@@ -33,28 +36,12 @@ const BoardsList: FC<BoardsListProps> = ({
     >
       <div className="absolute top-0 left-0 pr-2 overflow-hidden flex">
         <div className="w-[340px] h-[calc(100vh-70px)] container-main rounded-none">
-          {/* <div className="flex items-center h-20">
-            <button
-              type="button"
-              onClick={() => {
-                setIsNewBoard(true);
-              }}
-              className={twMerge(
-                isNewBoard
-                  ? "user text-lightGray select-none cursor-auto"
-                  : "hover:bg-darkWhite",
-                "flex items-center duration-300 ml-auto mr-auto border w-full justify-center py-2 rounded-custom"
-              )}
-            >
-              New board
-              <MdAdd
-                className={twMerge(
-                  isNewBoard ? "text-lightGray" : "text-accent",
-                  "ml-1 rounded-custom w-7 h-7 flex justify-center items-center"
-                )}
-              />
-            </button>
-          </div> */}
+          <Link href={{ pathname: "/board/1" }}>
+            <p>1</p>
+          </Link>
+          <Link href={{ pathname: "/board/2" }}>
+            <p>2</p>
+          </Link>
         </div>
         <div className="overflow-hidden pr-2 mt-6">
           <div className="round-down absolute left[340px] top-[10px]"></div>

@@ -1,42 +1,88 @@
-{
-  "boardName": "Test board 1",
-  "isFavorite": false,
-  "columns": [
-    { "name": "Open", "color": "#f4d63c" },
-    { "name": "Planned", "color": "#2f3032" },
-    { "name": "In progress", "color": "#e0965c" },
-    { "name": "Done", "color": "#3c6447" }
-  ],
-  "array": [
-    {
-      "id": 1,
-      "title": "Розробка Компонента на React",
-      "description": "Створення компонента на React - це ключовий крок у покращенні візуального відображення даних у вашому проєкті. Цей завдання націлене на створення ефективного компонента, який буде не лише простим у використанні, а й забезпечить зручність та швидкість при роботі з ним. Вам потрібно буде розробити React-компонент, який буде здатен оптимально відображати дані, дотримуючись кращих практик та стандартів React. Це може включати в себе використання стейтів, пропсів, життєвих циклів та інших ключових можливостей React для створення динамічного та ефективного компонента, готового до використання у вашому проєкті.",
-      "status": "Done"
-    },
-    {
-      "id": 2,
-      "title": "Task #2",
-      "description": "Description task #2",
-      "status": "Open"
-    },
-    {
-      "id": 3,
-      "title": "Task #3",
-      "description": "Description task #3",
-      "status": "Planned"
-    },
-    {
-      "id": 4,
-      "title": "Task #4",
-      "description": "Description task #4",
-      "status": "Planned"
-    },
-    {
-      "id": 5,
-      "title": "Task #5",
-      "description": "Description task #5",
-      "status": "In progress"
-    }
-  ]
-}
+[
+  {
+    "boardId": 1,
+    "boardName": "Test board 1",
+    "isFavorite": false,
+    "columns": [
+      { "name": "Open", "color": "#f4d63c" },
+      { "name": "Planned", "color": "#2f3032" },
+      { "name": "In progress", "color": "#e0965c" },
+      { "name": "Done", "color": "#3c6447" }
+    ],
+    "array": [
+      {
+        "id": 1,
+        "title": "Розробка Компонента на React",
+        "description": "Створення компонента на React - це ключовий крок у покращенні візуального відображення даних у вашому проєкті. Цей завдання націлене на створення ефективного компонента, який буде не лише простим у використанні, а й забезпечить зручність та швидкість при роботі з ним. Вам потрібно буде розробити React-компонент, який буде здатен оптимально відображати дані, дотримуючись кращих практик та стандартів React. Це може включати в себе використання стейтів, пропсів, життєвих циклів та інших ключових можливостей React для створення динамічного та ефективного компонента, готового до використання у вашому проєкті.",
+        "status": "Done"
+      },
+      {
+        "id": 2,
+        "title": "Task #2",
+        "description": "Description task #2",
+        "status": "Open"
+      },
+      {
+        "id": 3,
+        "title": "Task #3",
+        "description": "Description task #3",
+        "status": "Planned"
+      },
+      {
+        "id": 4,
+        "title": "Task #4",
+        "description": "Description task #4",
+        "status": "Planned"
+      },
+      {
+        "id": 5,
+        "title": "Task #5",
+        "description": "Description task #5",
+        "status": "In progress"
+      }
+    ]
+  },
+  {
+    "boardId": 2,
+    "boardName": "Test board 2",
+    "isFavorite": false,
+    "columns": [
+      { "name": "Open", "color": "#f4d63c" },
+      { "name": "Planned", "color": "#2f3032" },
+      { "name": "In progress", "color": "#e0965c" },
+      { "name": "Done", "color": "#3c6447" }
+    ],
+    "array": [
+      {
+        "id": 1,
+        "title": "Розробка Компонента на React",
+        "description": "Створення компонента на React - це ключовий крок у покращенні візуального відображення даних у вашому проєкті. Цей завдання націлене на створення ефективного компонента, який буде не лише простим у використанні, а й забезпечить зручність та швидкість при роботі з ним. Вам потрібно буде розробити React-компонент, який буде здатен оптимально відображати дані, дотримуючись кращих практик та стандартів React. Це може включати в себе використання стейтів, пропсів, життєвих циклів та інших ключових можливостей React для створення динамічного та ефективного компонента, готового до використання у вашому проєкті.",
+        "status": "Done"
+      },
+      {
+        "id": 2,
+        "title": "Task #2",
+        "description": "Description task #2",
+        "status": "Open"
+      },
+      {
+        "id": 3,
+        "title": "Task #3",
+        "description": "Description task #3",
+        "status": "Planned"
+      },
+      {
+        "id": 4,
+        "title": "Task #4",
+        "description": "Description task #4",
+        "status": "Planned"
+      },
+      {
+        "id": 5,
+        "title": "Task #5",
+        "description": "Description task #5",
+        "status": "In progress"
+      }
+    ]
+  }
+]

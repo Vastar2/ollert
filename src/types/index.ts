@@ -13,6 +13,7 @@ export interface TColumn {
 export type ItemField = Exclude<keyof Task, "id">;
 
 export interface TBoardData {
+  boardId: number;
   boardName: string;
   isFavorite: boolean;
   columns: TColumn[];

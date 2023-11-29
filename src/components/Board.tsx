@@ -9,9 +9,11 @@ import dataTemplate from "../data/data.json";
 import { handleDragOver, handleDragEnd } from "../utils/index";
 import type { ItemField, Task, TBoardData } from "../types";
 
-interface BoardProps {}
+interface BoardProps {
+  pathname: string;
+}
 
-const Board: FC<BoardProps> = () => {
+const Board: FC<BoardProps> = ({ pathname }) => {
   const [itemField] = useState<ItemField>("status");
   const [boardData, setBoardData] = useState<TBoardData | null>(null);
   const [currentTaskData, setCurrentTaskData] = useState<Task | null>(null);
@@ -22,20 +24,48 @@ const Board: FC<BoardProps> = () => {
 
   useEffect(() => {
     const storedData = localStorage.getItem("boardData");
-    if (storedData) {
-      setBoardData(JSON.parse(storedData));
+    const pathNumber = Number(
+      pathname.split("/")[pathname.split("/").length - 1]
+    );
+
+    if (
+      storedData &&
+      JSON.parse(storedData).some(
+        (item: any) => boardData?.boardId === item.boardId
+      )
+    ) {
+      setBoardData(
+        JSON.parse(storedData).filter(
+          (item: any) => item.boardId === pathNumber
+        )[0]
+      );
     } else {
-      setBoardData(dataTemplate);
+      setBoardData(() => {
+        return (dataTemplate as unknown as TBoardData[]).filter(
+          (item) => item.boardId === pathNumber
+        )[0];
+      });
     }
-  }, []);
+  }, [boardData?.boardId, pathname]);
 
   useEffect(() => {
-    if (boardData !== null) {
-      localStorage.setItem("boardData", JSON.stringify(boardData));
+    const storedData = localStorage.getItem("boardData");
+
+    if (boardData !== null && storedData !== null && storedData.length > 0) {
+      !JSON.parse(storedData).some(
+        (item: any) => boardData.boardId === item.boardId
+      ) &&
+        localStorage.setItem(
+          "boardData",
+          JSON.stringify([boardData, ...JSON.parse(storedData)])
+        );
+    } else if (
+      (boardData !== null && storedData === null) ||
+      (boardData !== null && storedData !== null && storedData.length === 0)
+    ) {
+      localStorage.setItem("boardData", JSON.stringify([boardData]));
     }
   }, [boardData]);
-
-  console.log(boardData);
 
   return (
     <>
