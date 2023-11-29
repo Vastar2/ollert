@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import { Task } from "../types";
-import { MdEdit, MdClose, MdOutlineDone } from "react-icons/md";
+import { MdEdit, MdClose, MdOutlineDone, MdDelete } from "react-icons/md";
 
 interface ModalReadAndEditTaskProps {
   currentTaskData: null | Task;
@@ -11,12 +11,14 @@ interface ModalReadAndEditTaskProps {
     editDescription: string,
     status: string
   ) => void;
+  onDeleteTask: (id: number) => void;
 }
 
 const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
   currentTaskData,
   resetTaskModal,
   onUpdateTask,
+  onDeleteTask,
 }) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [editText, setEditText] = useState("");
@@ -90,11 +92,22 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
           </p>
         )}
         <div className="absolute top-4 right-3 flex items-center">
+          <button
+            className="text-xl button-small"
+            onClick={() => {
+              onDeleteTask(currentTaskData.id);
+              resetTaskModal();
+              setIsEditMode(false);
+            }}
+            type="button"
+          >
+            <MdDelete />
+          </button>
           {isEditMode && (
             <p className="text-sm text-lightGray italic">Edit mode</p>
           )}
           <button
-            className="text-lg button-small ml-2"
+            className="text-lg button-small ml-1"
             onClick={() => {
               if (isEditMode) {
                 onUpdateTask(
