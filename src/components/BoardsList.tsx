@@ -16,7 +16,14 @@ const BoardsList: FC<BoardsListProps> = ({
 }) => {
   const [isNewBoard, setIsNewBoard] = useState(false);
   const [boardName, setBoardName] = useState("");
-  const [boardsListData, setBoardsListData] = useState(null);
+  const [boardsListData, setBoardsListData] = useState<
+    | {
+        boardId: string;
+        boardName: string;
+        isFavorite: string;
+      }[]
+    | null
+  >(null);
   const pathname = usePathname();
 
   useEffect(() => {
