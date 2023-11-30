@@ -23,15 +23,14 @@ const BoardsList: FC<BoardsListProps> = ({
     const storedData = localStorage.getItem("boardData");
 
     setBoardsListData(
-      JSON.parse(storedData).map((item: any) => ({
-        boardId: item.boardId,
-        boardName: item.boardName,
-        isFavorite: item.isFavorite,
-      }))
+      storedData &&
+        JSON.parse(storedData).map((item: any) => ({
+          boardId: item.boardId,
+          boardName: item.boardName,
+          isFavorite: item.isFavorite,
+        }))
     );
   }, []);
-
-  console.log(boardsListData, pathname);
 
   useEffect(() => {
     setIsNewBoard(false);
@@ -39,10 +38,6 @@ const BoardsList: FC<BoardsListProps> = ({
   }, [isBoardsList]);
 
   if (!isBoardsList) return null;
-
-  // const boarsIdList = ;
-
-  console.log(pathname.split("/")[pathname.split("/").length - 1]);
 
   return (
     <div
