@@ -14,17 +14,21 @@ import { HexColorPicker } from "react-colorful";
 interface BoardFiltersProps {
   isFavorite: boolean | undefined;
   boardName: string | undefined;
+  boardId: number;
   onToggleFavorite: () => void;
   onChangeName: (newBoardName: string) => void;
   onAddNewColumn: (newColumnName: string, newColumnColor: string) => void;
+  onDeleteBoard: (boardId: number) => void;
 }
 
 const BoardFilters: FC<BoardFiltersProps> = ({
   isFavorite,
   boardName,
+  boardId,
   onToggleFavorite,
   onChangeName,
   onAddNewColumn,
+  onDeleteBoard,
 }) => {
   const [editedBoardName, setEditedBoardName] = useState("");
   const [newColumnName, setNewColumnName] = useState<null | string>(null);
@@ -57,7 +61,7 @@ const BoardFilters: FC<BoardFiltersProps> = ({
               <MdEdit className="text-xl" />
             </button>
             <button
-              onClick={() => console.log("On board delete")}
+              onClick={() => onDeleteBoard(boardId)}
               type="button"
               className="button-small"
             >

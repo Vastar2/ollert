@@ -18,9 +18,9 @@ const BoardsList: FC<BoardsListProps> = ({
   const [boardName, setBoardName] = useState("");
   const [boardsListData, setBoardsListData] = useState<
     | {
-        boardId: string;
+        boardId: number;
         boardName: string;
-        isFavorite: string;
+        isFavorite: boolean;
       }[]
     | null
   >(null);
@@ -45,6 +45,60 @@ const BoardsList: FC<BoardsListProps> = ({
   }, [isBoardsList]);
 
   if (!isBoardsList) return null;
+
+  const handleAddBoard = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const id = Math.floor(Math.random() * (99999999 - 11111111 + 1)) + 11111111;
+    const localData = localStorage.getItem("boardData");
+
+    if (localData) {
+      const updatedData = [
+        {
+          boardId: id,
+          boardName: boardName,
+          isFavorite: false,
+          columns: [],
+          array: [],
+        },
+        ...(Array.isArray(JSON.parse(localData)) ? JSON.parse(localData) : []),
+      ];
+
+      setBoardsListData((prev: any) => [
+        ...prev,
+        {
+          boardId: id,
+          boardName: boardName,
+          isFavorite: false,
+        },
+      ]);
+
+      localStorage.setItem("boardData", JSON.stringify(updatedData));
+    } else {
+      const updatedData = [
+        {
+          boardId: id,
+          boardName: boardName,
+          isFavorite: false,
+          columns: [],
+          array: [],
+        },
+      ];
+
+      setBoardsListData([
+        {
+          boardId: id,
+          boardName: boardName,
+          isFavorite: false,
+        },
+      ]);
+
+      localStorage.setItem("boardData", JSON.stringify(updatedData));
+    }
+
+    setIsNewBoard(false);
+    setBoardName("");
+  };
 
   return (
     <div
@@ -76,7 +130,7 @@ const BoardsList: FC<BoardsListProps> = ({
                       )}
                       href={{ pathname: `/board/${item.boardId}` }}
                     >
-                      <div className="mr-2 button-small">
+                      <div className="mr-2 button-small hover:bg-transparent">
                         {item.isFavorite ? (
                           <MdStar className="text-2xl text-[orange]" />
                         ) : (
@@ -111,7 +165,7 @@ const BoardsList: FC<BoardsListProps> = ({
                       )}
                       href={{ pathname: `/board/${item.boardId}` }}
                     >
-                      <div className="mr-2 button-small">
+                      <div className="mr-2 button-small hover:bg-transparent">
                         {item.isFavorite ? (
                           <MdStar className="text-2xl text-[orange]" />
                         ) : (
@@ -134,11 +188,7 @@ const BoardsList: FC<BoardsListProps> = ({
           <div className="round-down absolute left[340px] top-[10px]"></div>
           {isNewBoard ? (
             <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                // Створення нової дошки
-                console.log(boardName);
-              }}
+              onSubmit={handleAddBoard}
               className="w-[340px] h-[168px] container-main rounded-l-none relative pt-5"
             >
               <label>
