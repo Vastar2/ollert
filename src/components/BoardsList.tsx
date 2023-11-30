@@ -1,8 +1,9 @@
 "use client";
 import { FC, useEffect, useState } from "react";
-import { MdAdd, MdClose } from "react-icons/md";
+import { MdAdd, MdClose, MdStar, MdStarBorder } from "react-icons/md";
 import { twMerge } from "tailwind-merge";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 interface BoardsListProps {
   isBoardsList: boolean;
@@ -15,6 +16,22 @@ const BoardsList: FC<BoardsListProps> = ({
 }) => {
   const [isNewBoard, setIsNewBoard] = useState(false);
   const [boardName, setBoardName] = useState("");
+  const [boardsListData, setBoardsListData] = useState(null);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    const storedData = localStorage.getItem("boardData");
+
+    setBoardsListData(
+      JSON.parse(storedData).map((item: any) => ({
+        boardId: item.boardId,
+        boardName: item.boardName,
+        isFavorite: item.isFavorite,
+      }))
+    );
+  }, []);
+
+  console.log(boardsListData, pathname);
 
   useEffect(() => {
     setIsNewBoard(false);
@@ -24,6 +41,8 @@ const BoardsList: FC<BoardsListProps> = ({
   if (!isBoardsList) return null;
 
   // const boarsIdList = ;
+
+  console.log(pathname.split("/")[pathname.split("/").length - 1]);
 
   return (
     <div
@@ -35,13 +54,79 @@ const BoardsList: FC<BoardsListProps> = ({
       }}
     >
       <div className="absolute top-0 left-0 pr-2 overflow-hidden flex">
-        <div className="w-[340px] h-[calc(100vh-70px)] container-main rounded-none">
-          <Link href={{ pathname: "/board/1" }}>
-            <p>1</p>
-          </Link>
-          <Link href={{ pathname: "/board/2" }}>
-            <p>2</p>
-          </Link>
+        <div className="w-[340px] h-[calc(100vh-70px)] pl-6 container-main rounded-none">
+          <p className="mb-4 text-sm text-lightGray pl-4">Favorites</p>
+          <ul className="relative after:content[''] after:w-[calc(100%-16px)] after:ml-0 after:h-[1px] after:bg-superLightGray pb-6 mb-6 after:absolute after:bottom-[2px]">
+            {boardsListData &&
+              boardsListData.map((item: any) => {
+                if (item.isFavorite === false) return;
+
+                return (
+                  <li className="w-full relative" key={item.boardId}>
+                    <Link
+                      className={twMerge(
+                        Number(
+                          pathname.split("/")[pathname.split("/").length - 1]
+                        ) !== item.boardId
+                          ? "duration-300 hover:bg-darkWhite"
+                          : "cursor-default select-none",
+                        "flex rounded-custom w-full px-4 py-2"
+                      )}
+                      href={{ pathname: `/board/${item.boardId}` }}
+                    >
+                      <div className="mr-2 button-small">
+                        {item.isFavorite ? (
+                          <MdStar className="text-2xl text-[orange]" />
+                        ) : (
+                          <MdStarBorder className="text-2xl" />
+                        )}
+                      </div>
+                      <p className="text-lg">{item.boardName}</p>
+                      {Number(
+                        pathname.split("/")[pathname.split("/").length - 1]
+                      ) === item.boardId && (
+                        <div className="absolute left-0 top-0 w-1 h-full bg-accent rounded-custom"></div>
+                      )}
+                    </Link>
+                  </li>
+                );
+              })}
+          </ul>
+          <ul className="pb-6 mb-6">
+            {boardsListData &&
+              boardsListData.map((item: any) => {
+                if (item.isFavorite === true) return;
+                return (
+                  <li className="w-full relative" key={item.boardId}>
+                    <Link
+                      className={twMerge(
+                        Number(
+                          pathname.split("/")[pathname.split("/").length - 1]
+                        ) !== item.boardId
+                          ? "duration-300 hover:bg-darkWhite"
+                          : "cursor-default select-none",
+                        "flex rounded-custom w-full px-4 py-2"
+                      )}
+                      href={{ pathname: `/board/${item.boardId}` }}
+                    >
+                      <div className="mr-2 button-small">
+                        {item.isFavorite ? (
+                          <MdStar className="text-2xl text-[orange]" />
+                        ) : (
+                          <MdStarBorder className="text-2xl" />
+                        )}
+                      </div>
+                      <p className="text-lg">{item.boardName}</p>
+                      {Number(
+                        pathname.split("/")[pathname.split("/").length - 1]
+                      ) === item.boardId && (
+                        <div className="absolute left-0 top-0 w-1 h-full bg-accent rounded-custom"></div>
+                      )}
+                    </Link>
+                  </li>
+                );
+              })}
+          </ul>
         </div>
         <div className="overflow-hidden pr-2 mt-6">
           <div className="round-down absolute left[340px] top-[10px]"></div>

@@ -22,7 +22,7 @@ export const useGetItems = ({ columns, itemsOriginal }: UseGetItemsProps) => {
       const resultItems: Record<string, Task[]> = {};
       statuses?.forEach((item) => (resultItems[item] = []));
       itemsOriginal?.forEach((item) => {
-        resultItems[item["status"]].push(item);
+        resultItems[item["status"]]?.push(item);
       });
       setItems(resultItems);
     };

@@ -5,6 +5,7 @@ import {
   MdAdd,
   MdOutlineDone,
   MdClose,
+  MdDelete,
 } from "react-icons/md";
 import { FC, useState } from "react";
 import { twMerge } from "tailwind-merge";
@@ -54,6 +55,13 @@ const BoardFilters: FC<BoardFiltersProps> = ({
               className="button-small"
             >
               <MdEdit className="text-xl" />
+            </button>
+            <button
+              onClick={() => console.log("On board delete")}
+              type="button"
+              className="button-small"
+            >
+              <MdDelete className="text-xl" />
             </button>
           </>
         ) : (
