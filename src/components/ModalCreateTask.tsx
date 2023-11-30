@@ -26,7 +26,7 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const id = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
+    const id = Math.floor(Math.random() * (99999999 - 11111111 + 1)) + 11111111;
     onSetNewTask(id, taskName, taskDescription, newTaskStatus.key);
 
     setTaskName("");

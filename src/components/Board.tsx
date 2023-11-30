@@ -8,6 +8,7 @@ import Loading from "./Loading";
 import dataTemplate from "../data/data.json";
 import { handleDragOver, handleDragEnd } from "../utils/index";
 import type { ItemField, Task, TBoardData } from "../types";
+import { useRouter } from "next/navigation";
 
 interface BoardProps {
   pathname: string;
@@ -21,6 +22,7 @@ const Board: FC<BoardProps> = ({ pathname }) => {
     key: string;
     color: string;
   } | null>(null);
+  const { push } = useRouter();
 
   useEffect(() => {
     const storedData = localStorage.getItem("boardData");
@@ -28,23 +30,12 @@ const Board: FC<BoardProps> = ({ pathname }) => {
       pathname.split("/")[pathname.split("/").length - 1]
     );
 
-    if (
-      storedData &&
-      JSON.parse(storedData).some(
-        (item: any) => boardData?.boardId === item.boardId
-      )
-    ) {
+    if (storedData) {
       setBoardData(
         JSON.parse(storedData).filter(
           (item: any) => item.boardId === pathNumber
         )[0]
       );
-    } else {
-      setBoardData(() => {
-        return (dataTemplate as unknown as TBoardData[]).filter(
-          (item) => item.boardId === pathNumber
-        )[0];
-      });
     }
   }, [boardData?.boardId, pathname]);
 
@@ -91,6 +82,7 @@ const Board: FC<BoardProps> = ({ pathname }) => {
           <BoardFilters
             isFavorite={boardData?.isFavorite}
             boardName={boardData?.boardName}
+            boardId={boardData?.boardId}
             onToggleFavorite={() =>
               setBoardData((prev: any) => ({
                 ...prev,
@@ -112,6 +104,21 @@ const Board: FC<BoardProps> = ({ pathname }) => {
                 ],
               }))
             }
+            onDeleteBoard={(boardId) => {
+              const localData = localStorage.getItem("boardData");
+
+              if (localData) {
+                const updatedData = [
+                  ...JSON.parse(localData).filter(
+                    (item: any) => item.boardId !== boardId
+                  ),
+                ];
+
+                localStorage.setItem("boardData", JSON.stringify(updatedData));
+
+                push("/");
+              }
+            }}
           />
           {boardData && (
             <DragAndDrop

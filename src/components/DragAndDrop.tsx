@@ -76,10 +76,8 @@ const DragAndDrop: FC<DragAndDropProps> = ({
 
   const sensors = useDefaultSensors();
 
-  console.log(columns, itemsOriginal);
-
   return (
-    <div className="px-6 select-none flex justify-center">
+    <div className="px-6 select-none flex gap-4 justify-center">
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
@@ -100,7 +98,7 @@ const DragAndDrop: FC<DragAndDropProps> = ({
             return (
               <div
                 key={index}
-                className="min-h-full h-[calc(100vh-224px)] mr-4 last-of-type:mr-0 pt-4 p-2 container-main relative"
+                className="min-h-full h-[calc(100vh-224px)] pt-4 p-2 container-main relative"
               >
                 <div className="flex items-center justify-center gap-2 mb-3">
                   <div className="relative">
