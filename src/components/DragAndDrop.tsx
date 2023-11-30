@@ -76,6 +76,8 @@ const DragAndDrop: FC<DragAndDropProps> = ({
 
   const sensors = useDefaultSensors();
 
+  console.log(columns, itemsOriginal);
+
   return (
     <div className="px-6 select-none flex justify-center">
       <DndContext

@@ -52,13 +52,30 @@ const Board: FC<BoardProps> = ({ pathname }) => {
     const storedData = localStorage.getItem("boardData");
 
     if (boardData !== null && storedData !== null && storedData.length > 0) {
-      !JSON.parse(storedData).some(
-        (item: any) => boardData.boardId === item.boardId
-      ) &&
+      if (
+        !JSON.parse(storedData).some(
+          (item: any) => boardData.boardId === item.boardId
+        )
+      ) {
         localStorage.setItem(
           "boardData",
           JSON.stringify([boardData, ...JSON.parse(storedData)])
         );
+      } else {
+        const index = JSON.parse(storedData).findIndex(
+          (item: any) => item.boardId === boardData.boardId
+        );
+        const finalStoredData = [
+          ...JSON.parse(storedData).slice(0, index),
+          boardData,
+          ...JSON.parse(storedData).slice(
+            index + 1,
+            JSON.parse(storedData).length
+          ),
+        ];
+
+        localStorage.setItem("boardData", JSON.stringify([...finalStoredData]));
+      }
     } else if (
       (boardData !== null && storedData === null) ||
       (boardData !== null && storedData !== null && storedData.length === 0)
