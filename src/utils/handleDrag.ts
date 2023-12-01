@@ -1,13 +1,13 @@
 import { DragOverEvent, DragEndEvent } from "@dnd-kit/core";
-import { ItemField } from "../types";
-import { Task } from "../types";
+import { TItemField } from "../types";
+import { TTask } from "../types";
 
-type Items = Record<string, Task[]>;
+type Items = Record<string, TTask[]>;
 
 export const handleDragOver = (
   event: DragOverEvent,
   setItems: React.Dispatch<
-    React.SetStateAction<Record<string, Task[]> | undefined>
+    React.SetStateAction<Record<string, TTask[]> | undefined>
   >,
   items?: Items
 ): void => {
@@ -78,10 +78,10 @@ export const handleDragEnd = (
   event: DragEndEvent,
   items: Items,
   setItems: React.Dispatch<
-    React.SetStateAction<Record<string, Task[]> | undefined>
+    React.SetStateAction<Record<string, TTask[]> | undefined>
   >,
-  arrayMove: (arr: Task[], from: number, to: number) => Task[],
-  itemField: ItemField,
+  arrayMove: (arr: TTask[], from: number, to: number) => TTask[],
+  itemField: TItemField,
   onChangeResultArray: any
 ): void => {
   const { active, over } = event;
