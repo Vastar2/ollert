@@ -1,14 +1,14 @@
 import { FC } from "react";
 import SortableItem from "./SortableItem";
 import { TbDragDrop } from "react-icons/tb";
-import { ItemField, Task, TColumn } from "../types";
+import { TItemField, TTask, TColumn } from "../types";
 
 interface SortableListProps {
-  items: Task[];
+  items: TTask[];
   id: string;
-  itemField: ItemField;
+  itemField: TItemField;
   columns: TColumn[];
-  onSetCurrentTaskData: (taskData: Task | null, color: string) => void;
+  onSetCurrentTaskData: (taskData: TTask | null, color: string) => void;
 }
 
 const ListOfItems: FC<SortableListProps> = ({

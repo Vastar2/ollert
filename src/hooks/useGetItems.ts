@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import type { Task, TColumn } from "../types";
+import type { TTask, TColumn } from "../types";
 
 interface UseGetItemsProps {
   columns: TColumn[];
-  itemsOriginal: Task[];
+  itemsOriginal: TTask[];
 }
 
 export const useGetItems = ({ columns, itemsOriginal }: UseGetItemsProps) => {
-  const [items, setItems] = useState<Record<string, Task[]>>();
+  const [items, setItems] = useState<Record<string, TTask[]>>();
 
   const [statuses, setStatuses] = useState<string[]>(
     columns?.map((item) => item.name)
@@ -19,7 +19,7 @@ export const useGetItems = ({ columns, itemsOriginal }: UseGetItemsProps) => {
 
   useEffect(() => {
     const getItems = () => {
-      const resultItems: Record<string, Task[]> = {};
+      const resultItems: Record<string, TTask[]> = {};
       statuses?.forEach((item) => (resultItems[item] = []));
       itemsOriginal?.forEach((item) => {
         resultItems[item["status"]]?.push(item);

@@ -1,9 +1,9 @@
 import Header from "./Header";
-import BoardsList from "./BoardsList";
+import BoardsListModal from "./BoardsListModal";
 import { FC, useState } from "react";
 
 interface LayoutProps {
-  children: any;
+  children: React.ReactNode;
 }
 
 const Layout: FC<LayoutProps> = ({ children }) => {
@@ -15,7 +15,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
         onToggleBoardsList={() => setIsBoardsList(!isBoardsList)}
       />
       {children}
-      <BoardsList
+      <BoardsListModal
         isBoardsList={isBoardsList}
         onToggleBoardsList={() => setIsBoardsList(!isBoardsList)}
       />

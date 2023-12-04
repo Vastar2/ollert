@@ -1,9 +1,9 @@
 import { FC, useEffect, useState } from "react";
-import { Task } from "../types";
+import { TTask } from "../types";
 import { MdEdit, MdClose, MdOutlineDone, MdDelete } from "react-icons/md";
 
 interface ModalReadAndEditTaskProps {
-  currentTaskData: null | Task;
+  currentTaskData: null | TTask;
   resetTaskModal: () => void;
   onUpdateTask: (
     id: number,

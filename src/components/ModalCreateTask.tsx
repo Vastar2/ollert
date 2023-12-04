@@ -28,7 +28,6 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
 
     const id = Math.floor(Math.random() * (99999999 - 11111111 + 1)) + 11111111;
     onSetNewTask(id, taskName, taskDescription, newTaskStatus.key);
-
     setTaskName("");
     setTaskDescription("");
     resetNewTaskStatus();

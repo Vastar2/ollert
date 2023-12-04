@@ -1,5 +1,14 @@
-export type Items = Record<string, Task[]>;
-export interface Task {
+export type TItemField = Exclude<keyof TTask, "id">;
+
+export interface TBoardData {
+  boardId: number;
+  boardName: string;
+  isFavorite: boolean;
+  columns: TColumn[];
+  array: TTask[];
+}
+
+export interface TTask {
   id: number;
   title: string;
   description: string;
@@ -9,13 +18,13 @@ export interface Task {
 export interface TColumn {
   name: string;
   color: string;
+  priority: number;
 }
-export type ItemField = Exclude<keyof Task, "id">;
 
-export interface TBoardData {
+export type TItems = Record<string, TTask[]>;
+
+export interface TBoardsListData {
   boardId: number;
   boardName: string;
   isFavorite: boolean;
-  columns: TColumn[];
-  array: Task[];
 }
