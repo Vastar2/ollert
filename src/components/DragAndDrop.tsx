@@ -217,7 +217,7 @@ const DragAndDrop: FC<DragAndDropProps> = ({
                       className={twMerge(
                         columns[
                           columns.findIndex((item: any) => item.name === key)
-                        ].priority === columns.length
+                        ]?.priority === columns.length
                           ? "button-small select-none cursor-default hover:bg-transparent opacity-40"
                           : "button-small",
                         " text-2xl w-5"

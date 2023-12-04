@@ -74,7 +74,134 @@ const Board: FC<BoardProps> = ({ pathname }) => {
     }
   }, [boardData]);
 
-  console.log(1234, boardData);
+  const handleAddNewColumn = (newColumnName: string, newColumnColor: string) =>
+    setBoardData(
+      (prev: TBoardData | null) =>
+        prev && {
+          ...prev,
+          columns: [
+            ...prev.columns,
+            {
+              name: newColumnName,
+              color: newColumnColor,
+              priority: prev.columns.length + 1,
+            },
+          ],
+        }
+    );
+
+  const handleDeleteBoard = (boardId: number) => {
+    const localData = localStorage.getItem("boardData");
+    if (localData) {
+      const updatedData = [
+        ...JSON.parse(localData).filter(
+          (item: TBoardData) => item.boardId !== boardId
+        ),
+      ];
+      localStorage.setItem("boardData", JSON.stringify(updatedData));
+      push("/");
+    }
+  };
+
+  const handleDeleteColumn = (status: string) => {
+    setBoardData(
+      (prev: TBoardData | null) =>
+        prev && {
+          ...prev,
+          columns: prev.columns.filter((item: TColumn) => {
+            return item.name !== status;
+          }),
+          array: prev.array.filter((item: TTask) => item.status !== status),
+        }
+    );
+  };
+
+  const handleChangeColumnColor = (key: string, newColumnColor: string) => {
+    setBoardData(
+      (prev: TBoardData | null) =>
+        prev && {
+          ...prev,
+          columns: [
+            ...prev.columns.slice(
+              0,
+              prev.columns.findIndex((item: TColumn) => item.name === key)
+            ),
+            {
+              ...prev.columns[
+                prev.columns.findIndex((item: TColumn) => item.name === key)
+              ],
+              name: key,
+              color: newColumnColor,
+            },
+            ...prev.columns.slice(
+              prev.columns.findIndex((item: TColumn) => item.name === key) + 1,
+              prev.columns.length
+            ),
+          ],
+        }
+    );
+  };
+
+  const handleMoveColumn = (
+    key: string,
+    dirrection: string,
+    oldPriority: number
+  ) => {
+    setBoardData((prev: any) => {
+      return {
+        ...prev,
+        columns: prev.columns.map((item: TColumn) =>
+          item.name === key
+            ? {
+                ...item,
+                priority:
+                  dirrection === "left" ? oldPriority - 1 : oldPriority + 1,
+              }
+            : item.priority ===
+              (dirrection === "left" ? oldPriority - 1 : oldPriority + 1)
+            ? {
+                ...item,
+                priority: oldPriority,
+              }
+            : item
+        ),
+      };
+    });
+  };
+
+  const handleUpdateTask = (
+    id: number,
+    taskName: string,
+    taskDescription: string,
+    status: string
+  ) => {
+    setBoardData(
+      (prev: TBoardData | null) =>
+        prev && {
+          ...prev,
+          array: [
+            ...prev.array.slice(
+              0,
+              prev.array.findIndex((item: TTask) => item.id === id)
+            ),
+            {
+              id,
+              title: taskName,
+              description: taskDescription,
+              status,
+            },
+            ...prev.array.slice(
+              prev.array.findIndex((item: TTask) => item.id === id) + 1,
+              prev.array.length
+            ),
+          ],
+        }
+    );
+    setCurrentTaskData(
+      (prev) =>
+        prev && { ...prev, title: taskName, description: taskDescription }
+    );
+  };
 
   return (
     <>
@@ -102,34 +229,8 @@ const Board: FC<BoardProps> = ({ pathname }) => {
                   }
               )
             }
-            onAddNewColumn={(newColumnName, newColumnColor) =>
-              setBoardData(
-                (prev: TBoardData | null) =>
-                  prev && {
-                    ...prev,
-                    columns: [
-                      ...prev.columns,
-                      {
-                        name: newColumnName,
-                        color: newColumnColor,
-                        priority: prev.columns.length + 1,
-                      },
-                    ],
-                  }
-              )
-            }
-            onDeleteBoard={(boardId) => {
-              const localData = localStorage.getItem("boardData");
-              if (localData) {
-                const updatedData = [
-                  ...JSON.parse(localData).filter(
-                    (item: TBoardData) => item.boardId !== boardId
-                  ),
-                ];
-                localStorage.setItem("boardData", JSON.stringify(updatedData));
-                push("/");
-              }
-            }}
+            onAddNewColumn={handleAddNewColumn}
+            onDeleteBoard={handleDeleteBoard}
           />
           {boardData && (
             <DragAndDrop
@@ -151,264 +252,9 @@ const Board: FC<BoardProps> = ({ pathname }) => {
                 )
               }
               onNewtask={(key, color) => setNewTaskStatus({ key, color })}
-              onDeleteColumn={(status) => {
-                setBoardData(
-                  (prev: TBoardData | null) =>
-                    prev && {
-                      ...prev,
-                      columns: prev.columns.filter((item: TColumn) => {
-                        return item.name !== status;
-                      }),
-                      array: prev.array.filter(
-                        (item: TTask) => item.status !== status
-                      ),
-                    }
-                );
-              }}
-              onChangeColumnColor={(key, newColumnColor) => {
-                setBoardData(
-                  (prev: TBoardData | null) =>
-                    prev && {
-                      ...prev,
-                      columns: [
-                        ...prev.columns.slice(
-                          0,
-                          prev.columns.findIndex(
-                            (item: TColumn) => item.name === key
-                          )
-                        ),
-                        {
-                          ...prev.columns[
-                            prev.columns.findIndex(
-                              (item: TColumn) => item.name === key
-                            )
-                          ],
-                          name: key,
-                          color: newColumnColor,
-                        },
-                        ...prev.columns.slice(
-                          prev.columns.findIndex(
-                            (item: TColumn) => item.name === key
-                          ) + 1,
-                          prev.columns.length
-                        ),
-                      ],
-                    }
-                );
-              }}
-              onMoveColumn={(key, dirrection, oldPriority) => {
-                // console.log(key, dirrection, oldPriority, boardData);
-                // action: 'inc' || 'dec'
-                // console.log(
-                //   boardData.columns.map((item: TColumn) =>
-                //     item.name === key
-                //       ? {
-                //           ...item,
-                //           priority:
-                //             dirrection === "left"
-                //               ? oldPriority - 1
-                //               : oldPriority + 1,
-                //         }
-                //       : item.priority ===
-                //         (dirrection === "left"
-                //           ? oldPriority - 1
-                //           : oldPriority + 1)
-                //       ? {
-                //           ...item,
-                //           priority: oldPriority,
-                //         }
-                //       : item
-                //   )
-                // );
-                setBoardData((prev: any) => {
-                  console.log(
-                    prev.columns.map((item: TColumn) =>
-                      item.name === key
-                        ? {
-                            ...item,
-                            priority:
-                              dirrection === "left"
-                                ? oldPriority - 1
-                                : oldPriority + 1,
-                          }
-                        : item.priority ===
-                          (dirrection === "left"
-                            ? oldPriority - 1
-                            : oldPriority + 1)
-                        ? {
-                            ...item,
-                            priority: oldPriority,
-                          }
-                        : item
-                    )
-                  );
-                  return {
-                    ...prev,
-                    columns: prev.columns.map((item: TColumn) =>
-                      item.name === key
-                        ? {
-                            ...item,
-                            priority:
-                              dirrection === "left"
-                                ? oldPriority - 1
-                                : oldPriority + 1,
-                          }
-                        : item.priority ===
-                          (dirrection === "left"
-                            ? oldPriority - 1
-                            : oldPriority + 1)
-                        ? {
-                            ...item,
-                            priority: oldPriority,
-                          }
-                        : item
-                    ),
-                  };
-                });
-                //   prev.columns.map((item: TColumn) =>
-                //     item.name === key
-                //       ? {
-                //           ...item,
-                //           priority:
-                //             dirrection === "left"
-                //               ? oldPriority - 1
-                //               : oldPriority + 1,
-                //         }
-                //       : item.priority ===
-                //         (dirrection === "left"
-                //           ? oldPriority - 1
-                //           : oldPriority + 1)
-                //       ? {
-                //           ...item,
-                //           priority:
-                //             dirrection === "left"
-                //               ? oldPriority + 1
-                //               : oldPriority - 1,
-                //         }
-                //       : item
-                //   )
-                // );
-                // console.log(
-                //   prev.columns.map((item: TColumn) =>
-                //     item.name === key
-                //       ? {
-                //           ...item,
-                //           priority:
-                //             dirrection === "left"
-                //               ? oldPriority - 1
-                //               : oldPriority + 1,
-                //         }
-                //       : item.priority === oldPriority
-                //       ? {
-                //           ...item,
-                //           priority:
-                //             dirrection === "left"
-                //               ? oldPriority + 1
-                //               : oldPriority - 1,
-                //         }
-                //       : item
-                //   )
-                // )
-                // const tempArray = [...prev.columns];
-                // console.log(tempArray);
-                // const foundIndex = tempArray.findIndex(
-                //   (item) => item.priority === oldPriority
-                // );
-                // const swapIndex = tempArray.findIndex((item) =>
-                //   dirrection === "left"
-                //     ? item.priority === oldPriority - 1
-                //     : item.priority === oldPriority + 1
-                // );
-                // console.log(foundIndex, swapIndex);
-                // if (foundIndex !== -1 && swapIndex !== -1) {
-                //   [
-                //     tempArray[foundIndex].priority,
-                //     tempArray[swapIndex].priority,
-                //   ] = [
-                //     tempArray[swapIndex].priority,
-                //     tempArray[foundIndex].priority,
-                //   ];
-                // }
-                // console.log(tempArray);
-                // const tempArray = [...prev.columns];
-                // console.log(12345678, oldPriority);
-                // const originalIndex =
-                //   dirrection === "left"
-                //     ? tempArray.findIndex(
-                //         (item: TColumn) => item.priority === oldPriority - 1
-                //       )
-                //     : tempArray.findIndex(
-                //         (item: TColumn) => item.priority === oldPriority + 1
-                //       );
-                // const partnerIndex = tempArray.findIndex(
-                //   (item: TColumn) => item.priority === oldPriority
-                // );
-                // console.log("originalIndex", originalIndex);
-                // console.log("partnerIndex", partnerIndex);
-                // console.log(
-                //   1234,
-                //   tempArray,
-                //   tempArray[originalIndex].priority,
-                //   tempArray[partnerIndex].priority
-                // );
-                // const temp = prev.columns[originalIndex].priority;
-                // console.log(1, temp, tempArray);
-                // tempArray[originalIndex].priority =
-                //   tempArray[partnerIndex].priority;
-                // tempArray[partnerIndex].priority = temp;
-                // console.log(
-                //   3,
-                //   tempArray,
-                //   tempArray[originalIndex].priority,
-                //   tempArray[partnerIndex].priority
-                // );
-                // console.log(
-                //   5678,
-                //   tempArray,
-                //   tempArray[originalIndex].priority,
-                //   tempArray[partnerIndex].priority
-                // );
-                // console.log(
-                //   "--------",
-                //   boardData,
-                //   { ...prev },
-                //   {
-                //     ...prev,
-                //     columns: tempArray,
-                //   },
-                //   tempArray
-                // );
-                // return {
-                //   ...prev,
-                // columns: [
-                //   ...prev.columns.filter(
-                //     (item, index) =>
-                //       index !== originalIndex && index !== partnerIndex
-                //   ),
-                //   ...prev.columns
-                //     .map(
-                //       (item, index) =>
-                //         index === originalIndex && {
-                //           ...prev.columns[originalIndex],
-                //           priority:
-                //             dirrection === "left"
-                //               ? oldPriority - 1
-                //               : oldPriority + 1,
-                //         }
-                //     )
-                //     .filter((item) => item),
-                //   ...prev.columns
-                //     .map(
-                //       (item, index) =>
-                //         index === partnerIndex && {
-                //           ...prev.columns[partnerIndex],
-                //           priority: oldPriority,
-                //         }
-                //     )
-                //     .filter((item) => item),
-                // ],
-                // };
-              }}
+              onDeleteColumn={handleDeleteColumn}
+              onChangeColumnColor={handleChangeColumnColor}
+              onMoveColumn={handleMoveColumn}
             />
           )}
         </div>
@@ -418,34 +264,7 @@ const Board: FC<BoardProps> = ({ pathname }) => {
       <ModalReadAndEditTask
         currentTaskData={currentTaskData}
         resetTaskModal={() => setCurrentTaskData(null)}
-        onUpdateTask={(id, taskName, taskDescription, status) => {
-          setBoardData(
-            (prev: TBoardData | null) =>
-              prev && {
-                ...prev,
-                array: [
-                  ...prev.array.slice(
-                    0,
-                    prev.array.findIndex((item: TTask) => item.id === id)
-                  ),
-                  {
-                    id,
-                    title: taskName,
-                    description: taskDescription,
-                    status,
-                  },
-                  ...prev.array.slice(
-                    prev.array.findIndex((item: TTask) => item.id === id) + 1,
-                    prev.array.length
-                  ),
-                ],
-              }
-          );
-          setCurrentTaskData(
-            (prev) =>
-              prev && { ...prev, title: taskName, description: taskDescription }
-          );
-        }}
+        onUpdateTask={handleUpdateTask}
         onDeleteTask={(id) => {
           setBoardData(
             (prev: TBoardData | null) =>
