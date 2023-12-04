@@ -74,7 +74,7 @@ const Board: FC<BoardProps> = ({ pathname }) => {
     }
   }, [boardData]);
 
-  console.log(boardData);
+  console.log(1234, boardData);
 
   return (
     <>
@@ -197,104 +197,217 @@ const Board: FC<BoardProps> = ({ pathname }) => {
                 );
               }}
               onMoveColumn={(key, dirrection, oldPriority) => {
-                // console.log("----", key, dirrection, oldPriority, boardData);
-
+                // console.log(key, dirrection, oldPriority, boardData);
+                // action: 'inc' || 'dec'
+                // console.log(
+                //   boardData.columns.map((item: TColumn) =>
+                //     item.name === key
+                //       ? {
+                //           ...item,
+                //           priority:
+                //             dirrection === "left"
+                //               ? oldPriority - 1
+                //               : oldPriority + 1,
+                //         }
+                //       : item.priority ===
+                //         (dirrection === "left"
+                //           ? oldPriority - 1
+                //           : oldPriority + 1)
+                //       ? {
+                //           ...item,
+                //           priority: oldPriority,
+                //         }
+                //       : item
+                //   )
+                // );
                 setBoardData((prev: any) => {
-                  const temp = [...prev.columns];
-
-                  console.log(temp);
-
-                  const oldIndex = prev.columns.findIndex(
-                    (item: TColumn) => item.name === key
-                  );
-                  const newIndex =
-                    dirrection === "left" ? oldIndex - 1 : oldIndex + 1;
-
-                  const temp2 = temp.filter(
-                    (item, index) => index !== oldIndex && index !== newIndex
-                  );
-                  // .filter((item, index) => index !== newIndex);
-
-                  const newOriginalTask = prev.columns[oldIndex];
-                  const newPartnerTask = prev.columns[newIndex];
-
-                  newOriginalTask.priority =
-                    dirrection === "left" ? oldPriority - 1 : oldPriority + 1;
-                  newPartnerTask.priority = oldPriority;
-
-                  temp2.push(newOriginalTask, newPartnerTask);
-
                   console.log(
-                    // oldIndex,
-                    // newIndex,
-                    // temp,
-                    // newOriginalTask,
-                    // newPartnerTask,
-                    temp2
+                    prev.columns.map((item: TColumn) =>
+                      item.name === key
+                        ? {
+                            ...item,
+                            priority:
+                              dirrection === "left"
+                                ? oldPriority - 1
+                                : oldPriority + 1,
+                          }
+                        : item.priority ===
+                          (dirrection === "left"
+                            ? oldPriority - 1
+                            : oldPriority + 1)
+                        ? {
+                            ...item,
+                            priority: oldPriority,
+                          }
+                        : item
+                    )
                   );
-
-                  // const newPriority =
-                  //   dirrection === "left" ? oldPriority - 1 : oldPriority + 1;
-
-                  // const originalTask = {
-                  //   ...prev.columns[prev.columns.indexOf(
-                  //     (item: TColumn) => item.priority === oldPriority
-                  //   ),
-                  // };
-                  // const partnerTask = {
-                  //   ...prev.columns[prev.columns.indexOf(
-                  //     (item: TColumn) => item.priority === newPriority
-                  //   ),
-                  // };
-
-                  // originalTask.priority = newPriority;
-                  // partnerTask.priority = oldPriority;
-
-                  // console.log(originalTask, partnerTask);
-
-                  // if (newIndex >= resultColumnsArray.length) {
-                  //   var temp = newIndex - resultColumnsArray.length + 1;
-                  //   while (temp--) {
-                  //     resultColumnsArray.push(undefined);
-                  //   }
-                  // }
-
-                  // resultColumnsArray.splice(
-                  //   newPriority,
-                  //   0,
-                  //   resultColumnsArray.splice(oldPriority, 1)[0]
-                  // );
-
-                  // return {
-                  //   ...prev,
-                  //   columns: [...prev.columns],
-                  // };
-                  // });
-
-                  // setBoardData((prev: any) => {
-                  //   const resultColumnsArray = [...prev.columns];
-                  //   const oldIndex = prev.columns.findIndex(
-                  //     (item: any) => item.name === key
-                  //   );
-                  //   const newIndex =
-                  //     dirrection === "left" ? oldIndex - 1 : oldIndex + 1;
-                  //   if (newIndex >= resultColumnsArray.length) {
-                  //     var temp = newIndex - resultColumnsArray.length + 1;
-                  //     while (temp--) {
-                  //       resultColumnsArray.push(undefined);
-                  //     }
-                  //   }
-                  //   resultColumnsArray.splice(
-                  //     newIndex,
-                  //     0,
-                  //     resultColumnsArray.splice(oldIndex, 1)[0]
-                  //   );
-
                   return {
                     ...prev,
-                    columns: temp2,
+                    columns: prev.columns.map((item: TColumn) =>
+                      item.name === key
+                        ? {
+                            ...item,
+                            priority:
+                              dirrection === "left"
+                                ? oldPriority - 1
+                                : oldPriority + 1,
+                          }
+                        : item.priority ===
+                          (dirrection === "left"
+                            ? oldPriority - 1
+                            : oldPriority + 1)
+                        ? {
+                            ...item,
+                            priority: oldPriority,
+                          }
+                        : item
+                    ),
                   };
                 });
+                //   prev.columns.map((item: TColumn) =>
+                //     item.name === key
+                //       ? {
+                //           ...item,
+                //           priority:
+                //             dirrection === "left"
+                //               ? oldPriority - 1
+                //               : oldPriority + 1,
+                //         }
+                //       : item.priority ===
+                //         (dirrection === "left"
+                //           ? oldPriority - 1
+                //           : oldPriority + 1)
+                //       ? {
+                //           ...item,
+                //           priority:
+                //             dirrection === "left"
+                //               ? oldPriority + 1
+                //               : oldPriority - 1,
+                //         }
+                //       : item
+                //   )
+                // );
+                // console.log(
+                //   prev.columns.map((item: TColumn) =>
+                //     item.name === key
+                //       ? {
+                //           ...item,
+                //           priority:
+                //             dirrection === "left"
+                //               ? oldPriority - 1
+                //               : oldPriority + 1,
+                //         }
+                //       : item.priority === oldPriority
+                //       ? {
+                //           ...item,
+                //           priority:
+                //             dirrection === "left"
+                //               ? oldPriority + 1
+                //               : oldPriority - 1,
+                //         }
+                //       : item
+                //   )
+                // )
+                // const tempArray = [...prev.columns];
+                // console.log(tempArray);
+                // const foundIndex = tempArray.findIndex(
+                //   (item) => item.priority === oldPriority
+                // );
+                // const swapIndex = tempArray.findIndex((item) =>
+                //   dirrection === "left"
+                //     ? item.priority === oldPriority - 1
+                //     : item.priority === oldPriority + 1
+                // );
+                // console.log(foundIndex, swapIndex);
+                // if (foundIndex !== -1 && swapIndex !== -1) {
+                //   [
+                //     tempArray[foundIndex].priority,
+                //     tempArray[swapIndex].priority,
+                //   ] = [
+                //     tempArray[swapIndex].priority,
+                //     tempArray[foundIndex].priority,
+                //   ];
+                // }
+                // console.log(tempArray);
+                // const tempArray = [...prev.columns];
+                // console.log(12345678, oldPriority);
+                // const originalIndex =
+                //   dirrection === "left"
+                //     ? tempArray.findIndex(
+                //         (item: TColumn) => item.priority === oldPriority - 1
+                //       )
+                //     : tempArray.findIndex(
+                //         (item: TColumn) => item.priority === oldPriority + 1
+                //       );
+                // const partnerIndex = tempArray.findIndex(
+                //   (item: TColumn) => item.priority === oldPriority
+                // );
+                // console.log("originalIndex", originalIndex);
+                // console.log("partnerIndex", partnerIndex);
+                // console.log(
+                //   1234,
+                //   tempArray,
+                //   tempArray[originalIndex].priority,
+                //   tempArray[partnerIndex].priority
+                // );
+                // const temp = prev.columns[originalIndex].priority;
+                // console.log(1, temp, tempArray);
+                // tempArray[originalIndex].priority =
+                //   tempArray[partnerIndex].priority;
+                // tempArray[partnerIndex].priority = temp;
+                // console.log(
+                //   3,
+                //   tempArray,
+                //   tempArray[originalIndex].priority,
+                //   tempArray[partnerIndex].priority
+                // );
+                // console.log(
+                //   5678,
+                //   tempArray,
+                //   tempArray[originalIndex].priority,
+                //   tempArray[partnerIndex].priority
+                // );
+                // console.log(
+                //   "--------",
+                //   boardData,
+                //   { ...prev },
+                //   {
+                //     ...prev,
+                //     columns: tempArray,
+                //   },
+                //   tempArray
+                // );
+                // return {
+                //   ...prev,
+                // columns: [
+                //   ...prev.columns.filter(
+                //     (item, index) =>
+                //       index !== originalIndex && index !== partnerIndex
+                //   ),
+                //   ...prev.columns
+                //     .map(
+                //       (item, index) =>
+                //         index === originalIndex && {
+                //           ...prev.columns[originalIndex],
+                //           priority:
+                //             dirrection === "left"
+                //               ? oldPriority - 1
+                //               : oldPriority + 1,
+                //         }
+                //     )
+                //     .filter((item) => item),
+                //   ...prev.columns
+                //     .map(
+                //       (item, index) =>
+                //         index === partnerIndex && {
+                //           ...prev.columns[partnerIndex],
+                //           priority: oldPriority,
+                //         }
+                //     )
+                //     .filter((item) => item),
+                // ],
+                // };
               }}
             />
           )}

@@ -113,7 +113,7 @@ const DragAndDrop: FC<DragAndDropProps> = ({
                         )}
                         style={{
                           backgroundColor: `${
-                            columns.filter((item) => item.name === key)[0]
+                            columns?.filter((item) => item.name === key)[0]
                               ?.color
                           }60`,
                         }}
@@ -192,8 +192,8 @@ const DragAndDrop: FC<DragAndDropProps> = ({
                       type="button"
                       className={twMerge(
                         columns[
-                          columns.findIndex((item: any) => item.name === key)
-                        ].priority === 1
+                          columns?.findIndex((item: any) => item.name === key)
+                        ]?.priority === 1
                           ? "button-small select-none cursor-default hover:bg-transparent opacity-40"
                           : "button-small",
                         " text-2xl w-5"
