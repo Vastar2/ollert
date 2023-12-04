@@ -8,6 +8,7 @@ import Loading from "./Loading";
 import { handleDragOver, handleDragEnd } from "../utils/index";
 import type { TItemField, TTask, TBoardData, TColumn } from "../types";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface BoardProps {
   pathname: string;
@@ -232,7 +233,7 @@ const Board: FC<BoardProps> = ({ pathname }) => {
             onAddNewColumn={handleAddNewColumn}
             onDeleteBoard={handleDeleteBoard}
           />
-          {boardData && (
+          {boardData.columns.length ? (
             <DragAndDrop
               columns={boardData?.columns}
               itemField={itemField}
@@ -256,6 +257,20 @@ const Board: FC<BoardProps> = ({ pathname }) => {
               onChangeColumnColor={handleChangeColumnColor}
               onMoveColumn={handleMoveColumn}
             />
+          ) : (
+            <div className="w-96 pt-12 ml-auto mr-auto relative">
+              <Image
+                src="/nothing.png"
+                alt="Nothing image"
+                priority
+                width={400}
+                height={0}
+                className="ml-auto mr-auto"
+              />
+              <p className="text-center text-lightGray">
+                Add your first column
+              </p>
+            </div>
           )}
         </div>
       ) : (

@@ -3,6 +3,7 @@ import { FC, useEffect, useState } from "react";
 import BoardsList from "./BoardsList";
 import BoardsListNewBoard from "./BoardsListNewBoard";
 import { TBoardsListData } from "../types";
+import { useRouter } from "next/navigation";
 
 interface BoardsListModalProps {
   isBoardsList: boolean;
@@ -18,6 +19,7 @@ const BoardsListModal: FC<BoardsListModalProps> = ({
   const [boardsListData, setBoardsListData] = useState<
     TBoardsListData[] | null
   >(null);
+  const { push } = useRouter();
 
   useEffect(() => {
     const storedData = localStorage.getItem("boardData");
@@ -30,7 +32,7 @@ const BoardsListModal: FC<BoardsListModalProps> = ({
           isFavorite: item.isFavorite,
         }))
     );
-  }, []);
+  }, [localStorage.getItem("boardData")]);
 
   useEffect(() => {
     setIsNewBoard(false);
@@ -69,6 +71,7 @@ const BoardsListModal: FC<BoardsListModalProps> = ({
       );
 
       localStorage.setItem("boardData", JSON.stringify(updatedData));
+      push(`/board/${id}`);
     } else {
       const updatedData = [
         {
@@ -89,6 +92,7 @@ const BoardsListModal: FC<BoardsListModalProps> = ({
       ]);
 
       localStorage.setItem("boardData", JSON.stringify(updatedData));
+      push(`/board/${id}`);
     }
 
     setIsNewBoard(false);
