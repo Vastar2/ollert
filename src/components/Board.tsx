@@ -15,7 +15,7 @@ interface BoardProps {
 }
 
 const Board: FC<BoardProps> = ({ pathname }) => {
-  const [itemField] = useState<TItemField>("status");
+  // const [itemField] = useState<TItemField>("status");
   const [boardData, setBoardData] = useState<TBoardData | null>(null);
   const [currentTaskData, setCurrentTaskData] = useState<TTask | null>(null);
   const [newTaskStatus, setNewTaskStatus] = useState<{
@@ -30,6 +30,7 @@ const Board: FC<BoardProps> = ({ pathname }) => {
       pathname.split("/")[pathname.split("/").length - 1]
     );
 
+    // Можливо, встановити дефолтний локас сторедж при його відсутності
     if (storedData) {
       setBoardData(
         JSON.parse(storedData).filter(
@@ -45,7 +46,7 @@ const Board: FC<BoardProps> = ({ pathname }) => {
     if (boardData !== null && storedData !== null && storedData.length > 0) {
       if (
         !JSON.parse(storedData).some(
-          (item: TBoardData) => boardData.boardId === item.boardId
+          (item: TBoardData) => item.boardId === boardData.boardId
         )
       ) {
         localStorage.setItem(
@@ -86,6 +87,7 @@ const Board: FC<BoardProps> = ({ pathname }) => {
               name: newColumnName,
               color: newColumnColor,
               priority: prev.columns.length + 1,
+              array: [],
             },
           ],
         }
@@ -123,7 +125,6 @@ const Board: FC<BoardProps> = ({ pathname }) => {
             .filter((item: TColumn) => {
               return item.name !== status;
             }),
-          array: prev.array.filter((item: TTask) => item.status !== status),
         }
     );
   };
@@ -191,20 +192,61 @@ const Board: FC<BoardProps> = ({ pathname }) => {
       (prev: TBoardData | null) =>
         prev && {
           ...prev,
-          array: [
-            ...prev.array.slice(
+          columns: [
+            ...prev.columns.slice(
               0,
-              prev.array.findIndex((item: TTask) => item.id === id)
+              prev.columns.findIndex((column) =>
+                column.array.some((item) => item.id === id)
+              )
             ),
             {
-              id,
-              title: taskName,
-              description: taskDescription,
-              status,
+              ...prev.columns[
+                prev.columns.findIndex((column) =>
+                  column.array.some((item) => item.id === id)
+                )
+              ],
+              array: [
+                ...prev.columns[
+                  prev.columns.findIndex((column) =>
+                    column.array.some((item) => item.id === id)
+                  )
+                ].array.slice(
+                  0,
+                  prev.columns[
+                    prev.columns.findIndex((column) =>
+                      column.array.some((item) => item.id === id)
+                    )
+                  ].array.findIndex((item: TTask) => item.id === id)
+                ),
+                {
+                  id,
+                  title: taskName,
+                  description: taskDescription,
+                  status,
+                },
+                ...prev.columns[
+                  prev.columns.findIndex((column) =>
+                    column.array.some((item) => item.id === id)
+                  )
+                ].array.slice(
+                  prev.columns[
+                    prev.columns.findIndex((column) =>
+                      column.array.some((item) => item.id === id)
+                    )
+                  ].array.findIndex((item: TTask) => item.id === id) + 1,
+                  prev.columns[
+                    prev.columns.findIndex((column) =>
+                      column.array.some((item) => item.id === id)
+                    )
+                  ].array.length
+                ),
+              ],
             },
-            ...prev.array.slice(
-              prev.array.findIndex((item: TTask) => item.id === id) + 1,
-              prev.array.length
+            ...prev.columns.slice(
+              prev.columns.findIndex((column) =>
+                column.array.some((item) => item.id === id)
+              ) + 1,
+              prev.columns.length
             ),
           ],
         }
@@ -247,8 +289,8 @@ const Board: FC<BoardProps> = ({ pathname }) => {
           {boardData.columns.length ? (
             <DragAndDrop
               columns={boardData?.columns}
-              itemField={itemField}
-              itemsOriginal={boardData?.array}
+              // itemField={itemField}
+              // itemsOriginal={boardData?.columns.array}
               onChangeOver={handleDragOver}
               onChangeEnd={handleDragEnd}
               onSetCurrentTaskData={(taskData, color) =>
@@ -259,7 +301,26 @@ const Board: FC<BoardProps> = ({ pathname }) => {
                   (prev: TBoardData | null) =>
                     prev && {
                       ...prev,
-                      array: newArray,
+                      columns: prev.columns.map((item) => {
+                        console.log(12, newArray);
+
+                        const resultArray = newArray
+                          .map((value: any) =>
+                            value.some(
+                              (parameter: any) => parameter.status === item.name
+                            )
+                              ? [...value]
+                              : null
+                          )
+                          .filter(
+                            (parameter: any) => parameter !== null && parameter
+                          );
+
+                        return {
+                          ...item,
+                          array: resultArray[0] || [],
+                        };
+                      }),
                     }
                 )
               }
@@ -288,17 +349,25 @@ const Board: FC<BoardProps> = ({ pathname }) => {
         <Loading />
       )}
       <ModalReadAndEditTask
+        columns={boardData?.columns}
         currentTaskData={currentTaskData}
         resetTaskModal={() => setCurrentTaskData(null)}
         onUpdateTask={handleUpdateTask}
-        onDeleteTask={(id) => {
+        onDeleteTask={(id, key) => {
           setBoardData(
-            (prev: TBoardData | null) =>
+            (prev: any) =>
               prev && {
                 ...prev,
-                array: prev.array.filter((item: TTask) => {
-                  return item.id !== id;
-                }),
+                columns: prev.columns.map((item: TColumn) =>
+                  item.name === key
+                    ? {
+                        ...item,
+                        array: [
+                          ...item.array.filter((value) => value.id !== id),
+                        ],
+                      }
+                    : item
+                ),
               }
           );
         }}
@@ -311,14 +380,23 @@ const Board: FC<BoardProps> = ({ pathname }) => {
             (prev: TBoardData | null) =>
               prev && {
                 ...prev,
-                array: [
-                  ...prev.array,
-                  {
-                    id,
-                    title: taskName,
-                    description: taskDescription,
-                    status: key,
-                  },
+                columns: [
+                  ...prev.columns.map((item) =>
+                    item.name === key
+                      ? {
+                          ...item,
+                          array: [
+                            ...item.array,
+                            {
+                              id,
+                              title: taskName,
+                              description: taskDescription,
+                              status: key,
+                            },
+                          ],
+                        }
+                      : item
+                  ),
                 ],
               }
           )

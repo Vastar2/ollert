@@ -1,5 +1,5 @@
 "use client";
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
 import {
   DndContext,
   closestCenter,
@@ -9,7 +9,7 @@ import {
 import { arrayMove } from "@dnd-kit/sortable";
 import SortableList from "./SortableList";
 import { useDefaultSensors } from "../hooks/useDefaultSensors";
-import { useGetItems } from "../hooks/useGetItems";
+// import { useGetItems } from "../hooks/useGetItems";
 import { TItemField, TTask, TColumn } from "../types";
 import {
   MdAdd,
@@ -26,8 +26,8 @@ type ItemsType = Record<string, TTask[]>;
 
 export interface DragAndDropProps {
   columns: TColumn[];
-  itemField: TItemField;
-  itemsOriginal: TTask[];
+  // itemField: TItemField;
+  // itemsOriginal: TTask[];
   onChangeOver: (
     event: DragOverEvent,
     setItems: React.Dispatch<
@@ -42,7 +42,7 @@ export interface DragAndDropProps {
       React.SetStateAction<Record<string, TTask[]> | undefined>
     >,
     arrayMove: (arr: TTask[], from: number, to: number) => TTask[],
-    itemField: TItemField,
+    // itemField: TItemField,
     onChangeResultArray: any
   ) => void;
   onSetCurrentTaskData: (taskData: TTask | null, color: string) => void;
@@ -55,8 +55,6 @@ export interface DragAndDropProps {
 
 const DragAndDrop: FC<DragAndDropProps> = ({
   columns,
-  itemField,
-  itemsOriginal,
   onChangeOver,
   onChangeEnd,
   onSetCurrentTaskData,
@@ -66,10 +64,17 @@ const DragAndDrop: FC<DragAndDropProps> = ({
   onChangeColumnColor,
   onMoveColumn,
 }) => {
-  const { items, setItems } = useGetItems({
-    columns,
-    itemsOriginal,
-  });
+  const [items, setItems] = useState<Record<string, TTask[]>>();
+
+  useEffect(() => {
+    const getItems = () => {
+      const resultItems: Record<string, TTask[]> = {};
+      columns?.forEach((item) => (resultItems[item.name] = [...item.array]));
+      setItems(resultItems);
+    };
+    getItems();
+  }, [columns]);
+
   const [keyOfEditingColumn, setKeyOfEditingColumn] = useState<string | null>(
     null
   );
@@ -89,7 +94,6 @@ const DragAndDrop: FC<DragAndDropProps> = ({
             items as ItemsType,
             setItems,
             arrayMove,
-            itemField,
             onChangeResultArray
           )
         }
@@ -159,7 +163,6 @@ const DragAndDrop: FC<DragAndDropProps> = ({
                   <SortableList
                     items={value}
                     id={key}
-                    itemField={itemField}
                     columns={columns}
                     onSetCurrentTaskData={onSetCurrentTaskData}
                   />

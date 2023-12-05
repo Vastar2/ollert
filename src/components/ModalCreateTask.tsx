@@ -71,6 +71,7 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
                 type="text"
                 value={taskName}
                 onChange={(e) => setTaskName(e.target.value)}
+                autoFocus
               />
             </label>
           </div>

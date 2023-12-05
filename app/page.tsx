@@ -7,11 +7,9 @@ import { MdStar, MdStarBorder } from "react-icons/md";
 import Link from "next/link";
 
 const App = () => {
-  const [boardName, setBoardName] = useState("");
   const [boardsListData, setBoardsListData] = useState<
     TBoardsListData[] | null
   >(null);
-  const { push } = useRouter();
 
   useEffect(() => {
     const storedData = localStorage.getItem("boardData");
@@ -25,62 +23,6 @@ const App = () => {
         }))
     );
   }, []);
-
-  const handleAddBoard = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const id = Math.floor(Math.random() * (99999999 - 11111111 + 1)) + 11111111;
-    const localData = localStorage.getItem("boardData");
-
-    if (localData) {
-      const updatedData = [
-        {
-          boardId: id,
-          boardName: boardName,
-          isFavorite: false,
-          columns: [],
-          array: [],
-        },
-        ...(Array.isArray(JSON.parse(localData)) ? JSON.parse(localData) : []),
-      ];
-
-      setBoardsListData(
-        (prev: TBoardsListData[] | null) =>
-          prev && [
-            ...prev,
-            {
-              boardId: id,
-              boardName: boardName,
-              isFavorite: false,
-            },
-          ]
-      );
-
-      localStorage.setItem("boardData", JSON.stringify(updatedData));
-      push(`/board/${id}`);
-    } else {
-      const updatedData = [
-        {
-          boardId: id,
-          boardName: boardName,
-          isFavorite: false,
-          columns: [],
-          array: [],
-        },
-      ];
-
-      setBoardsListData([
-        {
-          boardId: id,
-          boardName: boardName,
-          isFavorite: false,
-        },
-      ]);
-
-      localStorage.setItem("boardData", JSON.stringify(updatedData));
-      push(`/board/${id}`);
-    }
-    setBoardName("");
-  };
 
   return (
     <Layout>

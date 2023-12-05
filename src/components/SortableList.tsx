@@ -10,7 +10,7 @@ import ListOfItems from "./ListOfItems";
 interface SortableListProps {
   items: TTask[];
   id: string;
-  itemField: TItemField;
+  // itemField: TItemField;
   columns: TColumn[];
   onSetCurrentTaskData: (taskData: TTask | null, color: string) => void;
 }
@@ -18,7 +18,7 @@ interface SortableListProps {
 const SortableList: FC<SortableListProps> = ({
   items,
   id,
-  itemField,
+  // itemField,
   columns,
   onSetCurrentTaskData,
 }) => {
@@ -38,7 +38,7 @@ const SortableList: FC<SortableListProps> = ({
             <ListOfItems
               items={items}
               id={id}
-              itemField={itemField}
+              // itemField={itemField}
               columns={columns}
               onSetCurrentTaskData={onSetCurrentTaskData}
             />
@@ -48,7 +48,7 @@ const SortableList: FC<SortableListProps> = ({
             <ListOfItems
               items={items}
               id={id}
-              itemField={itemField}
+              // itemField={itemField}
               columns={columns}
               onSetCurrentTaskData={onSetCurrentTaskData}
             />

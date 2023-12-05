@@ -8,7 +8,7 @@ import { RxDragHandleDots1 } from "react-icons/rx";
 interface SortableItemProps {
   item: TTask;
   id: string;
-  itemField: TItemField;
+  // itemField: TItemField;
   columns: TColumn[];
   onSetCurrentTaskData: (taskData: TTask | null, color: string) => void;
 }
@@ -17,7 +17,7 @@ const SortableItem: FC<SortableItemProps> = ({
   columns,
   id,
   item,
-  itemField,
+  // itemField,
   onSetCurrentTaskData,
 }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
@@ -61,7 +61,13 @@ const SortableItem: FC<SortableItemProps> = ({
           }30`,
         }}
       >
-        {item[itemField]}
+        {
+          columns[
+            columns.findIndex((column) =>
+              column.array.some((value) => value.id === item.id)
+            )
+          ]?.name
+        }
       </span>
       <p
         className="text-base text-halfLightGray h-[48px] text-ellipsis overflow-hidden"

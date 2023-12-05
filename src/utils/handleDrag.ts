@@ -81,7 +81,7 @@ export const handleDragEnd = (
     React.SetStateAction<Record<string, TTask[]> | undefined>
   >,
   arrayMove: (arr: TTask[], from: number, to: number) => TTask[],
-  itemField: TItemField,
+  // itemField: TItemField,
   onChangeResultArray: any
 ): void => {
   const { active, over } = event;
@@ -114,17 +114,22 @@ export const handleDragEnd = (
     const resultArray = prevItems[overContainer].map((item, index) => {
       if (index === prevItems[activeContainer].indexOf(objectWithOurIndex[0])) {
         const newItem = { ...item };
-        newItem[itemField] = overContainer as string;
+        // console.log(newItem);
+        newItem.status = overContainer as string;
         return newItem;
       } else {
         return item;
       }
     });
 
+    console.log(2, resultArray);
+
     return resultArray;
   };
 
   setItems((prevItems) => {
+    // console.log(1, prevItems && prevItems[overContainer]);
+
     if (prevItems) {
       const newItems = {
         ...prevItems,
@@ -134,7 +139,7 @@ export const handleDragEnd = (
           overIndex
         ),
       };
-      onChangeResultArray(Object.values(newItems).flatMap((item) => item));
+      onChangeResultArray(Object.values(newItems));
       return newItems;
     }
   });

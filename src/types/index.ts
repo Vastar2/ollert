@@ -5,6 +5,12 @@ export interface TBoardData {
   boardName: string;
   isFavorite: boolean;
   columns: TColumn[];
+}
+
+export interface TColumn {
+  name: string;
+  color: string;
+  priority: number;
   array: TTask[];
 }
 
@@ -12,13 +18,8 @@ export interface TTask {
   id: number;
   title: string;
   description: string;
-  status: string;
   color?: string;
-}
-export interface TColumn {
-  name: string;
-  color: string;
-  priority: number;
+  status?: string;
 }
 
 export type TItems = Record<string, TTask[]>;
