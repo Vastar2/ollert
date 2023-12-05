@@ -109,9 +109,20 @@ const Board: FC<BoardProps> = ({ pathname }) => {
       (prev: TBoardData | null) =>
         prev && {
           ...prev,
-          columns: prev.columns.filter((item: TColumn) => {
-            return item.name !== status;
-          }),
+          columns: prev.columns
+            .map((item) => {
+              return item.priority >
+                prev.columns[
+                  prev.columns.findIndex(
+                    (item: TColumn | null) => item?.name === status
+                  )
+                ].priority
+                ? { ...item, priority: item.priority - 1 }
+                : item;
+            })
+            .filter((item: TColumn) => {
+              return item.name !== status;
+            }),
           array: prev.array.filter((item: TTask) => item.status !== status),
         }
     );
