@@ -27,10 +27,10 @@
 
 .dark {
   --main-white: #2d2d2d;
-  --dark-white: #3f3f3f;
+  --dark-white: #373737;
   --main-gray: #ededed;
   --light-gray: #c1c1c1;
-  --half-light-gray: #7d7d7d;
+  --half-light-gray: #b3b3b3;
   --super-light-gray: #7a7a7a;
   --accent: #63a4d6;
   --accent-hover: #4091cf;
@@ -131,7 +131,7 @@ body {
 .color-input .react-colorful {
   padding: 12px;
   border-radius: 6px;
-  background: #fff;
+  background: var(--main-white);
   box-shadow: 0px 0px 26px -12px rgba(0, 0, 0, 0.1);
   height: 38px;
   max-width: 100%;

@@ -21,14 +21,16 @@ import { BiSolidEyedropper } from "react-icons/bi";
 import { HexColorPicker } from "react-colorful";
 import { twMerge } from "tailwind-merge";
 
-type ItemsType = Record<string, TTask[]>;
+type ItemsType = Record<string, { priority: number; array: TTask[] }>;
 
 export interface DragAndDropProps {
   columns: TColumn[];
   onChangeOver: (
     event: DragOverEvent,
     setItems: React.Dispatch<
-      React.SetStateAction<Record<string, TTask[]> | undefined>
+      React.SetStateAction<
+        Record<string, { priority: number; array: TTask[] }> | undefined
+      >
     >,
     items: ItemsType
   ) => void;
@@ -36,7 +38,9 @@ export interface DragAndDropProps {
     event: DragEndEvent,
     items: ItemsType,
     setItems: React.Dispatch<
-      React.SetStateAction<Record<string, TTask[]> | undefined>
+      React.SetStateAction<
+        Record<string, { priority: number; array: TTask[] }> | undefined
+      >
     >,
     arrayMove: (arr: TTask[], from: number, to: number) => TTask[],
     onChangeResultArray: any
@@ -60,16 +64,29 @@ const DragAndDrop: FC<DragAndDropProps> = ({
   onChangeColumnColor,
   onMoveColumn,
 }) => {
-  const [items, setItems] = useState<Record<string, TTask[]>>();
+  const [items, setItems] =
+    useState<Record<string, { priority: number; array: TTask[] }>>();
 
   useEffect(() => {
     const getItems = () => {
-      const resultItems: Record<string, TTask[]> = {};
-      columns
-        ?.sort((a, b) => {
-          return a.priority - b.priority;
-        })
-        .forEach((item) => (resultItems[item.name] = [...item.array]));
+      const resultItems: Record<string, { priority: number; array: TTask[] }> =
+        {};
+
+      const finalColumns = [...columns];
+
+      finalColumns.forEach((item) => {
+        resultItems[item.name] = {
+          priority: item.priority,
+          array: [...item.array],
+        };
+      });
+
+      // finalColumns.sort((a, b) => {
+      //   return a.priority - b.priority;
+      // });
+
+      console.log(resultItems);
+
       setItems(resultItems);
     };
     getItems();
@@ -99,141 +116,150 @@ const DragAndDrop: FC<DragAndDropProps> = ({
         }
       >
         {!!items &&
-          Object.entries(items).map(([key, value], _) => {
-            return (
-              <div
-                key={key}
-                className="min-h-full h-[calc(100vh-224px)] pt-4 p-2 container-main relative"
-              >
-                <div className="flex items-center justify-center gap-2 mb-3">
-                  <div className="relative">
-                    <div
-                      className={twMerge(
-                        keyOfEditingColumn === key
-                          ? "border-2 border-accent"
-                          : "border-2 border-transparent",
-                        "w-7 h-7 relative rounded-[50%]"
-                      )}
-                      style={{
-                        backgroundColor: `${
-                          columns?.filter((item) => item.name === key)[0]?.color
-                        }60`,
-                      }}
-                    >
-                      <button
-                        onClick={() => {
-                          setKeyOfEditingColumn(() =>
-                            keyOfEditingColumn === key ? null : key
-                          );
-                          setNewColumnColor(
-                            columns.filter((item) => item.name === key)[0].color
-                          );
+          Object.entries(items)
+            .sort(
+              ([keyA, valueA], [keyB, valueB]) =>
+                valueA.priority - valueB.priority
+            )
+            .map(([key, value], _) => {
+              return (
+                <div
+                  key={key}
+                  className="min-h-full h-[calc(100vh-224px)] pt-4 p-2 container-main relative"
+                >
+                  <div className="flex items-center justify-center gap-2 mb-3">
+                    <div className="relative">
+                      <div
+                        className={twMerge(
+                          keyOfEditingColumn === key
+                            ? "border-2 border-accent"
+                            : "border-2 border-transparent",
+                          "w-7 h-7 relative rounded-[50%]"
+                        )}
+                        style={{
+                          backgroundColor: `${
+                            columns?.filter((item) => item.name === key)[0]
+                              ?.color
+                          }60`,
                         }}
-                        className="w-5 h-5 overflow-hidden rounded-[50%] flex justify-center items-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
                       >
-                        <BiSolidEyedropper className="text-xs overflow-hidden" />
-                      </button>
-                    </div>
-                    {keyOfEditingColumn === key && (
-                      <div className="flex gap-1 color-input example absolute z-50 top-[38px] mb-2">
-                        <HexColorPicker
-                          color={newColumnColor}
-                          onChange={setNewColumnColor}
-                          className="relative -left-1/3 border border-1 border-superLightGray"
-                        />
                         <button
                           onClick={() => {
-                            onChangeColumnColor(key, newColumnColor);
-                            setKeyOfEditingColumn(null);
-                            setNewColumnColor("#EE4B4B");
+                            setKeyOfEditingColumn(() =>
+                              keyOfEditingColumn === key ? null : key
+                            );
+                            setNewColumnColor(
+                              columns.filter((item) => item.name === key)[0]
+                                .color
+                            );
                           }}
-                          className="relative -left-1/3 text-lg button-small bg-white h-[38px] w-[38px] border border-1 border-superLightGray"
-                          type="button"
+                          className="w-5 h-5 overflow-hidden rounded-[50%] flex justify-center items-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
                         >
-                          <MdOutlineDone className="text-accent" />
+                          <BiSolidEyedropper className="text-xs overflow-hidden" />
                         </button>
                       </div>
-                    )}
+                      {keyOfEditingColumn === key && (
+                        <div className="flex gap-1 color-input example absolute z-50 top-[38px] mb-2">
+                          <HexColorPicker
+                            color={newColumnColor}
+                            onChange={setNewColumnColor}
+                            className="relative -left-1/3 border border-1 border-superLightGray"
+                          />
+                          <button
+                            onClick={() => {
+                              onChangeColumnColor(key, newColumnColor);
+                              setKeyOfEditingColumn(null);
+                              setNewColumnColor("#EE4B4B");
+                            }}
+                            className="relative -left-1/3 text-lg button-small bg-white h-[38px] w-[38px] border border-1 border-superLightGray"
+                            type="button"
+                          >
+                            <MdOutlineDone className="text-accent" />
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                    <p className="font-[600] text-xl">{key}</p>
                   </div>
-                  <p className="font-[600] text-xl">{key}</p>
-                </div>
-                <SortableList
-                  items={value}
-                  id={key}
-                  columns={columns}
-                  onSetCurrentTaskData={onSetCurrentTaskData}
-                />
-                <button
-                  type="button"
-                  onClick={() =>
-                    onNewtask(
-                      key,
-                      columns.filter((item) => item.name === key)[0].color
-                    )
-                  }
-                  className="flex items-center duration-300 ml-auto mr-auto border w-full justify-center py-2 rounded-custom hover:bg-darkWhite mt-4"
-                >
-                  New task
-                  <MdAdd className="ml-1 rounded-custom w-7 h-7 flex justify-center items-center text-accent" />
-                </button>
-                <div className="absolute top-3.5 left-2 flex gap-0.5">
+                  <SortableList
+                    items={value.array}
+                    id={key}
+                    columns={columns}
+                    onSetCurrentTaskData={onSetCurrentTaskData}
+                  />
                   <button
+                    type="button"
                     onClick={() =>
-                      columns[
-                        columns.findIndex((item: any) => item.name === key)
-                      ].priority !== 1 &&
-                      onMoveColumn(
+                      onNewtask(
                         key,
-                        "left",
-                        columns.filter((item) => item.name === key)[0].priority
+                        columns.filter((item) => item.name === key)[0].color
                       )
                     }
-                    type="button"
-                    className={twMerge(
-                      columns[
-                        columns?.findIndex((item: any) => item.name === key)
-                      ]?.priority === 1
-                        ? "button-small select-none cursor-default hover:bg-transparent opacity-40"
-                        : "button-small",
-                      " text-2xl w-5"
-                    )}
+                    className="flex items-center duration-300 ml-auto mr-auto border w-full justify-center py-2 rounded-custom hover:bg-darkWhite mt-4"
                   >
-                    <MdOutlineKeyboardArrowLeft />
+                    New task
+                    <MdAdd className="ml-1 rounded-custom w-7 h-7 flex justify-center items-center text-accent" />
                   </button>
+                  <div className="absolute top-3.5 left-2 flex gap-0.5">
+                    <button
+                      onClick={() =>
+                        columns[
+                          columns.findIndex((item: any) => item.name === key)
+                        ].priority !== 1 &&
+                        onMoveColumn(
+                          key,
+                          "left",
+                          columns.filter((item) => item.name === key)[0]
+                            .priority
+                        )
+                      }
+                      type="button"
+                      className={twMerge(
+                        columns[
+                          columns?.findIndex((item: any) => item.name === key)
+                        ]?.priority === 1
+                          ? "button-small select-none cursor-default hover:bg-transparent opacity-40"
+                          : "button-small",
+                        " text-2xl w-5"
+                      )}
+                    >
+                      <MdOutlineKeyboardArrowLeft />
+                    </button>
+                    <button
+                      onClick={() =>
+                        columns[
+                          columns.findIndex((item: any) => item.name === key)
+                        ].priority !== columns.length &&
+                        onMoveColumn(
+                          key,
+                          "right",
+                          columns.filter((item) => item.name === key)[0]
+                            .priority
+                        )
+                      }
+                      type="button"
+                      className={twMerge(
+                        columns[
+                          columns.findIndex((item: any) => item.name === key)
+                        ]?.priority === columns.length
+                          ? "button-small select-none cursor-default hover:bg-transparent opacity-40"
+                          : "button-small",
+                        " text-2xl w-5"
+                      )}
+                    >
+                      <MdOutlineKeyboardArrowRight />
+                    </button>
+                  </div>
                   <button
-                    onClick={() =>
-                      columns[
-                        columns.findIndex((item: any) => item.name === key)
-                      ].priority !== columns.length &&
-                      onMoveColumn(
-                        key,
-                        "right",
-                        columns.filter((item) => item.name === key)[0].priority
-                      )
-                    }
+                    onClick={() => onDeleteColumn(key)}
                     type="button"
-                    className={twMerge(
-                      columns[
-                        columns.findIndex((item: any) => item.name === key)
-                      ]?.priority === columns.length
-                        ? "button-small select-none cursor-default hover:bg-transparent opacity-40"
-                        : "button-small",
-                      " text-2xl w-5"
-                    )}
+                    className={twMerge("absolute top-3.5 right-2 button-small")}
                   >
-                    <MdOutlineKeyboardArrowRight />
+                    <MdDelete />
                   </button>
                 </div>
-                <button
-                  onClick={() => onDeleteColumn(key)}
-                  type="button"
-                  className={twMerge("absolute top-3.5 right-2 button-small")}
-                >
-                  <MdDelete />
-                </button>
-              </div>
-            );
-          })}
+              );
+            })}
       </DndContext>
     </div>
   );

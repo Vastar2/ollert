@@ -298,12 +298,13 @@ const Board: FC<BoardProps> = ({ pathname }) => {
                     prev && {
                       ...prev,
                       columns: prev.columns.map((item) => {
+                        console.log(1234, newArray);
                         const resultArray = newArray
                           .map((value: any) =>
-                            value.some(
+                            value.array.some(
                               (parameter: any) => parameter.status === item.name
                             )
-                              ? [...value]
+                              ? [...value.array]
                               : null
                           )
                           .filter(
