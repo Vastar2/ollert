@@ -6,7 +6,6 @@ import { TItemField, TTask, TColumn } from "../types";
 interface SortableListProps {
   items: TTask[];
   id: string;
-  // itemField: TItemField;
   columns: TColumn[];
   onSetCurrentTaskData: (taskData: TTask | null, color: string) => void;
 }
@@ -14,7 +13,6 @@ interface SortableListProps {
 const ListOfItems: FC<SortableListProps> = ({
   items,
   id,
-  // itemField,
   columns,
   onSetCurrentTaskData,
 }) => {
@@ -26,7 +24,6 @@ const ListOfItems: FC<SortableListProps> = ({
             key={index}
             item={item}
             id={id}
-            // itemField={itemField}
             columns={columns}
             onSetCurrentTaskData={onSetCurrentTaskData}
           />

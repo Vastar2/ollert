@@ -15,7 +15,6 @@ interface BoardProps {
 }
 
 const Board: FC<BoardProps> = ({ pathname }) => {
-  // const [itemField] = useState<TItemField>("status");
   const [boardData, setBoardData] = useState<TBoardData | null>(null);
   const [currentTaskData, setCurrentTaskData] = useState<TTask | null>(null);
   const [newTaskStatus, setNewTaskStatus] = useState<{
@@ -30,7 +29,6 @@ const Board: FC<BoardProps> = ({ pathname }) => {
       pathname.split("/")[pathname.split("/").length - 1]
     );
 
-    // Можливо, встановити дефолтний локас сторедж при його відсутності
     if (storedData) {
       setBoardData(
         JSON.parse(storedData).filter(
@@ -289,8 +287,6 @@ const Board: FC<BoardProps> = ({ pathname }) => {
           {boardData.columns.length ? (
             <DragAndDrop
               columns={boardData?.columns}
-              // itemField={itemField}
-              // itemsOriginal={boardData?.columns.array}
               onChangeOver={handleDragOver}
               onChangeEnd={handleDragEnd}
               onSetCurrentTaskData={(taskData, color) =>
@@ -302,8 +298,6 @@ const Board: FC<BoardProps> = ({ pathname }) => {
                     prev && {
                       ...prev,
                       columns: prev.columns.map((item) => {
-                        console.log(12, newArray);
-
                         const resultArray = newArray
                           .map((value: any) =>
                             value.some(
@@ -331,15 +325,25 @@ const Board: FC<BoardProps> = ({ pathname }) => {
             />
           ) : (
             <div className="w-96 pt-12 ml-auto mr-auto relative">
-              <Image
-                src="/nothing.png"
-                alt="Nothing image"
-                priority
-                width={400}
-                height={0}
-                className="ml-auto mr-auto"
-              />
-              <p className="text-center text-lightGray">
+              <div className="w-[400px] h-[400px] relative flex justify-center items-center">
+                <Image
+                  src="/nothing.png"
+                  alt="Nothing image"
+                  priority
+                  width={400}
+                  height={0}
+                  className="ml-auto mr-auto absolute z-10"
+                />
+                <Image
+                  src="/giphy.gif"
+                  alt="Nothing gif"
+                  priority
+                  width={200}
+                  height={0}
+                  className="ml-auto mr-auto absolute"
+                />
+              </div>
+              <p className="text-center text-lightGray relative bottom-4">
                 Add your first column
               </p>
             </div>

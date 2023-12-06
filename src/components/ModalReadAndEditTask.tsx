@@ -26,8 +26,6 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
   const [editText, setEditText] = useState("");
   const [editDescription, setEditDescription] = useState("");
 
-  console.log(currentTaskData);
-
   useEffect(() => {
     setEditText(currentTaskData?.title || "");
     setEditDescription(currentTaskData?.description || "");

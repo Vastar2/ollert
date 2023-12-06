@@ -9,7 +9,6 @@ import {
 import { arrayMove } from "@dnd-kit/sortable";
 import SortableList from "./SortableList";
 import { useDefaultSensors } from "../hooks/useDefaultSensors";
-// import { useGetItems } from "../hooks/useGetItems";
 import { TItemField, TTask, TColumn } from "../types";
 import {
   MdAdd,
@@ -26,8 +25,6 @@ type ItemsType = Record<string, TTask[]>;
 
 export interface DragAndDropProps {
   columns: TColumn[];
-  // itemField: TItemField;
-  // itemsOriginal: TTask[];
   onChangeOver: (
     event: DragOverEvent,
     setItems: React.Dispatch<
@@ -42,7 +39,6 @@ export interface DragAndDropProps {
       React.SetStateAction<Record<string, TTask[]> | undefined>
     >,
     arrayMove: (arr: TTask[], from: number, to: number) => TTask[],
-    // itemField: TItemField,
     onChangeResultArray: any
   ) => void;
   onSetCurrentTaskData: (taskData: TTask | null, color: string) => void;
