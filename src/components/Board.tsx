@@ -6,7 +6,7 @@ import ModalReadAndEditTask from "./ModalReadAndEditTask";
 import ModalCreateTask from "./ModalCreateTask";
 import Loading from "./Loading";
 import { handleDragOver, handleDragEnd } from "../utils/index";
-import type { TItemField, TTask, TBoardData, TColumn } from "../types";
+import type { TTask, TBoardData, TColumn } from "../types";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
@@ -324,16 +324,8 @@ const Board: FC<BoardProps> = ({ pathname }) => {
               onMoveColumn={handleMoveColumn}
             />
           ) : (
-            <div className="w-96 pt-12 ml-auto mr-auto relative">
-              <div className="w-[400px] h-[400px] relative flex justify-center items-center">
-                <Image
-                  src="/nothing.png"
-                  alt="Nothing image"
-                  priority
-                  width={400}
-                  height={0}
-                  className="ml-auto mr-auto absolute z-10"
-                />
+            <div className="w-96 pt-28 ml-auto mr-auto relative">
+              <div className="w-[200px] h-[200px] ml-auto mr-auto relative flex justify-center items-center rounded-[50%] overflow-hidden">
                 <Image
                   src="/giphy.gif"
                   alt="Nothing gif"
@@ -343,7 +335,7 @@ const Board: FC<BoardProps> = ({ pathname }) => {
                   className="ml-auto mr-auto absolute"
                 />
               </div>
-              <p className="text-center text-lightGray relative bottom-4">
+              <p className="text-center text-lightGray mt-8">
                 Add your first column
               </p>
             </div>

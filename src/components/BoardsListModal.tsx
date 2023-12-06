@@ -99,7 +99,7 @@ const BoardsListModal: FC<BoardsListModalProps> = ({
 
   return (
     <div
-      className="absolute z-50 top-[70px] left-0 w-full h-[calc(100vh-70px)] bg-[#00000040]"
+      className="absolute z-50 top-[70px] left-0 w-full h-[calc(100vh-70px)] bg-[#00000040] dark:bg-[#00000020]"
       onClick={(e) => {
         if (e.target === e.currentTarget) {
           onToggleBoardsList();

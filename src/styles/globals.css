@@ -10,11 +10,30 @@
     @apply duration-300 hover:bg-darkWhite rounded-custom w-7 h-7 flex justify-center items-center text-lightGray;
   }
   .input-main {
-    @apply w-full block py-2 px-4 border border-lightGray rounded-custom focus:outline focus:border-accent outline-none;
+    @apply w-full block py-2 px-4 border border-lightGray dark:bg-darkWhite text-mainGray rounded-custom focus:outline focus:border-accent outline-none;
   }
-  /* .container-light {
-    @apply;
-  } */
+}
+
+:root {
+  --main-white: #fffeff;
+  --dark-white: #f1f1f1;
+  --main-gray: #4d5559;
+  --light-gray: #b3b3b3;
+  --half-light-gray: #767676;
+  --super-light-gray: #dbdbdb;
+  --accent: #63a4d6;
+  --accent-hover: #4091cf;
+}
+
+.dark {
+  --main-white: #2d2d2d;
+  --dark-white: #3f3f3f;
+  --main-gray: #ededed;
+  --light-gray: #c1c1c1;
+  --half-light-gray: #7d7d7d;
+  --super-light-gray: #7a7a7a;
+  --accent: #63a4d6;
+  --accent-hover: #4091cf;
 }
 
 .round-up {
@@ -103,22 +122,10 @@
   }
 }
 
-:root {
-  --main-white: #fffeff;
-  --dark-white: #f1f1f1;
-  --main-gray: #4d5559;
-  --light-gray: #b3b3b3;
-  --accent: #63a4d6;
-  --accent-hover: #4091cf;
-}
-
-/* @media (prefers-color-scheme: dark) {:root {}} */
-
 body {
   height: 100vh;
   color: var(--main-gray);
-  background: linear-gradient(to bottom, var(--dark-white), #f5f5f5)
-    var(--dark-white);
+  background-color: var(--dark-white);
 }
 
 .color-input .react-colorful {

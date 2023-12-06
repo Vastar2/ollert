@@ -9,7 +9,7 @@ import {
 import { arrayMove } from "@dnd-kit/sortable";
 import SortableList from "./SortableList";
 import { useDefaultSensors } from "../hooks/useDefaultSensors";
-import { TItemField, TTask, TColumn } from "../types";
+import { TTask, TColumn } from "../types";
 import {
   MdAdd,
   MdDelete,

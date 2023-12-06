@@ -33,7 +33,7 @@ const SortableItem: FC<SortableItemProps> = ({
       {...attributes}
       {...listeners}
       className={twMerge(
-        "text-lg border bg-gray-50 rounded-custom p-3 pt-4 mb-2  last-of-type:mb-0 relative z-[40] overflow-hidden"
+        "text-lg border dark:border-halfLightGray bg-gray-50 dark:bg-darkWhite rounded-custom p-3 pt-4 mb-2  last-of-type:mb-0 relative z-[40] overflow-hidden"
       )}
       onClick={() =>
         onSetCurrentTaskData(

@@ -71,7 +71,7 @@ const BoardFiltersTitle: FC<BoardFiltersTitleProps> = ({
             type="text"
             value={editedBoardName}
             onChange={(e) => onSetEditedBoardName(e.target.value)}
-            className="inline text-2xl border px-2 py-1 rounded-l-custom focus:outline focus:outline-1 focus:outline-accent max-w-[220px] relative z-10"
+            className="dark:bg-darkWhite inline text-2xl border px-2 py-1 rounded-l-custom focus:outline focus:outline-1 focus:outline-accent max-w-[220px] relative z-10"
             autoFocus
           />
           <button

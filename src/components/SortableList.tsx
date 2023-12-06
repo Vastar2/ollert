@@ -4,7 +4,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { useDroppable } from "@dnd-kit/core";
-import { TItemField, TTask, TColumn } from "../types";
+import { TTask, TColumn } from "../types";
 import ListOfItems from "./ListOfItems";
 
 interface SortableListProps {

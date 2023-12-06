@@ -57,7 +57,7 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
               backgroundColor: `${currentTaskData.color}30`,
             }}
           >
-            <p className="text-halfLightGray">
+            <p className="text-halfLightGray dark:text-lightGray">
               {
                 columns[
                   columns.findIndex((column) =>

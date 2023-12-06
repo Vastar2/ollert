@@ -1,7 +1,7 @@
 import { FC } from "react";
 import SortableItem from "./SortableItem";
 import { TbDragDrop } from "react-icons/tb";
-import { TItemField, TTask, TColumn } from "../types";
+import { TTask, TColumn } from "../types";
 
 interface SortableListProps {
   items: TTask[];
@@ -29,7 +29,7 @@ const ListOfItems: FC<SortableListProps> = ({
           />
         ))
       ) : (
-        <div className="border w-full py-8 h-[146px] rounded-custom bg-gray-50 flex justify-center items-center">
+        <div className="border dark:border-halfLightGray w-full py-8 h-[146px] rounded-custom bg-gray-50 dark:bg-darkWhite flex justify-center items-center">
           <TbDragDrop className="text-lightGray text-4xl" />
         </div>
       )}
