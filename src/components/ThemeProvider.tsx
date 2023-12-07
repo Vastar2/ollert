@@ -10,9 +10,16 @@ interface ThemeProviderProps {
 }
 
 const ThemeProvider: FC<ThemeProviderProps> = ({ children }) => {
-  const [isLightTheme, setIsLightTheme] = useState<boolean | null>(
-    localStorage.getItem("theme") === "true"
-  );
+  const [isLightTheme, setIsLightTheme] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const localTheme = localStorage.getItem("theme");
+    if (localTheme === "true" || localTheme === "false") {
+      setIsLightTheme(localTheme === "true");
+    } else {
+      setIsLightTheme(true);
+    }
+  }, []);
 
   useEffect(() => {
     if (isLightTheme !== null) {
