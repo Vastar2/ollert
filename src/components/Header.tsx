@@ -5,9 +5,9 @@ import {
   MdSunny,
   MdNightlight,
 } from "react-icons/md";
-import { FC, useEffect, useState } from "react";
+import { FC, useContext } from "react";
 import { twMerge } from "tailwind-merge";
-import { TbChevronsDownLeft } from "react-icons/tb";
+import { ThemeContext } from "./ThemeProvider";
 
 interface HeaderProps {
   isBoardsList: boolean;
@@ -15,26 +15,10 @@ interface HeaderProps {
 }
 
 const Header: FC<HeaderProps> = ({ isBoardsList, onToggleBoardsList }) => {
-  const [isLightTheme, setIsLightTheme] = useState<boolean | null>(null);
-
-  useEffect(() => {
-    const localTheme = localStorage.getItem("theme");
-    if (localTheme === "true" || localTheme === "false") {
-      setIsLightTheme(localTheme === "true");
-    } else {
-      setIsLightTheme(true);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (isLightTheme !== null) {
-      document.documentElement.classList.toggle("dark", !isLightTheme);
-      localStorage.setItem("theme", JSON.stringify(isLightTheme));
-    }
-  }, [isLightTheme]);
+  const theme = useContext(ThemeContext);
 
   return (
-    <div className="h-[70px] mb-6 flex px-6 items-center relative bg-mainWhite shadow-[0px_0px_26px_-12px_rgba(0,0,0,0.10)]">
+    <div className="h-[70px] mb-3 flex px-6 items-center relative bg-mainWhite shadow-[0px_0px_26px_-12px_rgba(0,0,0,0.10)]">
       <button
         type="button"
         onClick={onToggleBoardsList}
@@ -63,13 +47,13 @@ const Header: FC<HeaderProps> = ({ isBoardsList, onToggleBoardsList }) => {
       <div className="ml-auto">
         <button
           className={twMerge(
-            isLightTheme ? "text-[orange]" : "text-accent",
+            theme?.isLightTheme ? "text-[orange]" : "text-accent",
             "button-small text-xl w-10 h-10"
           )}
           type="button"
-          onClick={() => setIsLightTheme(!isLightTheme)}
+          onClick={() => theme?.setIsLightTheme(!theme?.isLightTheme)}
         >
-          {isLightTheme ? <MdSunny /> : <MdNightlight />}
+          {theme?.isLightTheme ? <MdSunny /> : <MdNightlight />}
         </button>
       </div>
     </div>

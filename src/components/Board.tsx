@@ -22,6 +22,7 @@ const Board: FC<BoardProps> = ({ pathname }) => {
     color: string;
   } | null>(null);
   const { push } = useRouter();
+  const [sortingParameter, setSortingParameter] = useState("priority");
 
   useEffect(() => {
     const storedData = localStorage.getItem("boardData");
@@ -32,7 +33,7 @@ const Board: FC<BoardProps> = ({ pathname }) => {
     if (storedData) {
       setBoardData(
         JSON.parse(storedData).filter(
-          (item: TBoardData) => item.boardId === pathNumber
+          (item: TBoardData) => item?.boardId === pathNumber
         )[0]
       );
     }
@@ -44,7 +45,7 @@ const Board: FC<BoardProps> = ({ pathname }) => {
     if (boardData !== null && storedData !== null && storedData.length > 0) {
       if (
         !JSON.parse(storedData).some(
-          (item: TBoardData) => item.boardId === boardData.boardId
+          (item: TBoardData) => item?.boardId === boardData?.boardId
         )
       ) {
         localStorage.setItem(
@@ -53,7 +54,7 @@ const Board: FC<BoardProps> = ({ pathname }) => {
         );
       } else {
         const index = JSON.parse(storedData).findIndex(
-          (item: TBoardData) => item.boardId === boardData.boardId
+          (item: TBoardData) => item?.boardId === boardData?.boardId
         );
         const finalStoredData = [
           ...JSON.parse(storedData).slice(0, index),
@@ -283,6 +284,11 @@ const Board: FC<BoardProps> = ({ pathname }) => {
             }
             onAddNewColumn={handleAddNewColumn}
             onDeleteBoard={handleDeleteBoard}
+            sortingParameter={sortingParameter}
+            onSetSortingParameter={(e) => {
+              setSortingParameter((e.target as HTMLButtonElement).id);
+            }}
+            columnsLength={boardData?.columns.length}
           />
           {boardData.columns.length ? (
             <DragAndDrop
@@ -298,7 +304,6 @@ const Board: FC<BoardProps> = ({ pathname }) => {
                     prev && {
                       ...prev,
                       columns: prev.columns.map((item) => {
-                        console.log(1234, newArray);
                         const resultArray = newArray
                           .map((value: any) =>
                             value.array.some(
@@ -323,6 +328,7 @@ const Board: FC<BoardProps> = ({ pathname }) => {
               onDeleteColumn={handleDeleteColumn}
               onChangeColumnColor={handleChangeColumnColor}
               onMoveColumn={handleMoveColumn}
+              sortingParameter={sortingParameter}
             />
           ) : (
             <div className="w-96 pt-28 ml-auto mr-auto relative">

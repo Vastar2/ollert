@@ -27,19 +27,17 @@ const BoardsListModal: FC<BoardsListModalProps> = ({
     setBoardsListData(
       storedData &&
         JSON.parse(storedData).map((item: TBoardsListData) => ({
-          boardId: item.boardId,
-          boardName: item.boardName,
-          isFavorite: item.isFavorite,
+          boardId: item?.boardId,
+          boardName: item?.boardName,
+          isFavorite: item?.isFavorite,
         }))
     );
-  }, [localStorage.getItem("boardData")]);
+  }, []);
 
   useEffect(() => {
     setIsNewBoard(false);
     setBoardName("");
   }, [isBoardsList]);
-
-  if (!isBoardsList) return null;
 
   const handleAddBoard = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
