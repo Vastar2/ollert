@@ -2,12 +2,14 @@ import { DragOverEvent, DragEndEvent } from "@dnd-kit/core";
 import { TItemField } from "../types";
 import { TTask } from "../types";
 
-type Items = Record<string, TTask[]>;
+type Items = Record<string, { priority: number; array: TTask[] }>;
 
 export const handleDragOver = (
   event: DragOverEvent,
   setItems: React.Dispatch<
-    React.SetStateAction<Record<string, TTask[]> | undefined>
+    React.SetStateAction<
+      Record<string, { priority: number; array: TTask[] }> | undefined
+    >
   >,
   items?: Items
 ): void => {
@@ -28,8 +30,8 @@ export const handleDragOver = (
 
   setItems((prev) => {
     if (prev) {
-      const activeItems = prev[activeContainer] || [];
-      const overItems = prev[overContainer] || [];
+      const activeItems = prev[activeContainer].array || [];
+      const overItems = prev[overContainer].array || [];
 
       const activeIndex = activeItems.filter((item) => item.id === id)[0].id;
 
@@ -55,20 +57,26 @@ export const handleDragOver = (
         newIndex = overIndex >= 0 ? overIndex + modifier : overItems.length;
       }
 
-      const objectWithOurIndex = items[activeContainer].filter(
+      const objectWithOurIndex = items[activeContainer].array.filter(
         (item) => item.id === activeIndex
       );
 
       return {
         ...prev,
-        [activeContainer]: [...activeItems.filter((item) => item.id !== id)],
-        [overContainer]: [
-          ...overItems.slice(0, newIndex),
-          items[activeContainer][
-            items[activeContainer].indexOf(objectWithOurIndex[0])
+        [activeContainer]: {
+          ...prev[activeContainer],
+          array: [...activeItems.filter((item) => item.id !== id)],
+        },
+        [overContainer]: {
+          ...prev[overContainer],
+          array: [
+            ...overItems.slice(0, newIndex),
+            items[activeContainer].array[
+              items[activeContainer].array.indexOf(objectWithOurIndex[0])
+            ],
+            ...overItems.slice(newIndex, overItems.length),
           ],
-          ...overItems.slice(newIndex, overItems.length),
-        ],
+        },
       };
     }
   });
@@ -78,10 +86,11 @@ export const handleDragEnd = (
   event: DragEndEvent,
   items: Items,
   setItems: React.Dispatch<
-    React.SetStateAction<Record<string, TTask[]> | undefined>
+    React.SetStateAction<
+      Record<string, { priority: number; array: TTask[] }> | undefined
+    >
   >,
   arrayMove: (arr: TTask[], from: number, to: number) => TTask[],
-  itemField: TItemField,
   onChangeResultArray: any
 ): void => {
   const { active, over } = event;
@@ -99,22 +108,25 @@ export const handleDragEnd = (
     return;
   }
 
-  const activeIndex = (items[activeContainer] || []).filter(
+  const activeIndex = (items[activeContainer].array || []).filter(
     (item) => item.id === id
   )[0].id;
-  const overIndex = items[overContainer].indexOf(
-    (items[overContainer] || []).filter((item) => item.id === overId)[0]
+  const overIndex = items[overContainer].array.indexOf(
+    (items[overContainer].array || []).filter((item) => item.id === overId)[0]
   );
 
-  const objectWithOurIndex = items[activeContainer].filter(
+  const objectWithOurIndex = items[activeContainer].array.filter(
     (item) => item.id === activeIndex
   );
 
   const newArray = (prevItems: Items) => {
-    const resultArray = prevItems[overContainer].map((item, index) => {
-      if (index === prevItems[activeContainer].indexOf(objectWithOurIndex[0])) {
+    const resultArray = prevItems[overContainer].array.map((item, index) => {
+      if (
+        index ===
+        prevItems[activeContainer].array.indexOf(objectWithOurIndex[0])
+      ) {
         const newItem = { ...item };
-        newItem[itemField] = overContainer as string;
+        newItem.status = overContainer as string;
         return newItem;
       } else {
         return item;
@@ -128,13 +140,17 @@ export const handleDragEnd = (
     if (prevItems) {
       const newItems = {
         ...prevItems,
-        [overContainer]: arrayMove(
-          newArray(prevItems) || [],
-          prevItems[activeContainer].indexOf(objectWithOurIndex[0]),
-          overIndex
-        ),
+        [overContainer]: {
+          ...prevItems[overContainer],
+          array: arrayMove(
+            newArray(prevItems) || [],
+            prevItems[activeContainer].array.indexOf(objectWithOurIndex[0]),
+            overIndex
+          ),
+        },
       };
-      onChangeResultArray(Object.values(newItems).flatMap((item) => item));
+
+      onChangeResultArray(Object.values(newItems));
       return newItems;
     }
   });

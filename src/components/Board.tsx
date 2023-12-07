@@ -6,15 +6,15 @@ import ModalReadAndEditTask from "./ModalReadAndEditTask";
 import ModalCreateTask from "./ModalCreateTask";
 import Loading from "./Loading";
 import { handleDragOver, handleDragEnd } from "../utils/index";
-import type { TItemField, TTask, TBoardData, TColumn } from "../types";
+import type { TTask, TBoardData, TColumn } from "../types";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface BoardProps {
   pathname: string;
 }
 
 const Board: FC<BoardProps> = ({ pathname }) => {
-  const [itemField] = useState<TItemField>("status");
   const [boardData, setBoardData] = useState<TBoardData | null>(null);
   const [currentTaskData, setCurrentTaskData] = useState<TTask | null>(null);
   const [newTaskStatus, setNewTaskStatus] = useState<{
@@ -22,6 +22,7 @@ const Board: FC<BoardProps> = ({ pathname }) => {
     color: string;
   } | null>(null);
   const { push } = useRouter();
+  const [sortingParameter, setSortingParameter] = useState("priority");
 
   useEffect(() => {
     const storedData = localStorage.getItem("boardData");
@@ -32,7 +33,7 @@ const Board: FC<BoardProps> = ({ pathname }) => {
     if (storedData) {
       setBoardData(
         JSON.parse(storedData).filter(
-          (item: TBoardData) => item.boardId === pathNumber
+          (item: TBoardData) => item?.boardId === pathNumber
         )[0]
       );
     }
@@ -44,7 +45,7 @@ const Board: FC<BoardProps> = ({ pathname }) => {
     if (boardData !== null && storedData !== null && storedData.length > 0) {
       if (
         !JSON.parse(storedData).some(
-          (item: TBoardData) => boardData.boardId === item.boardId
+          (item: TBoardData) => item?.boardId === boardData?.boardId
         )
       ) {
         localStorage.setItem(
@@ -53,7 +54,7 @@ const Board: FC<BoardProps> = ({ pathname }) => {
         );
       } else {
         const index = JSON.parse(storedData).findIndex(
-          (item: TBoardData) => item.boardId === boardData.boardId
+          (item: TBoardData) => item?.boardId === boardData?.boardId
         );
         const finalStoredData = [
           ...JSON.parse(storedData).slice(0, index),
@@ -85,6 +86,7 @@ const Board: FC<BoardProps> = ({ pathname }) => {
               name: newColumnName,
               color: newColumnColor,
               priority: prev.columns.length + 1,
+              array: [],
             },
           ],
         }
@@ -108,10 +110,20 @@ const Board: FC<BoardProps> = ({ pathname }) => {
       (prev: TBoardData | null) =>
         prev && {
           ...prev,
-          columns: prev.columns.filter((item: TColumn) => {
-            return item.name !== status;
-          }),
-          array: prev.array.filter((item: TTask) => item.status !== status),
+          columns: prev.columns
+            .map((item) => {
+              return item.priority >
+                prev.columns[
+                  prev.columns.findIndex(
+                    (item: TColumn | null) => item?.name === status
+                  )
+                ].priority
+                ? { ...item, priority: item.priority - 1 }
+                : item;
+            })
+            .filter((item: TColumn) => {
+              return item.name !== status;
+            }),
         }
     );
   };
@@ -179,20 +191,61 @@ const Board: FC<BoardProps> = ({ pathname }) => {
       (prev: TBoardData | null) =>
         prev && {
           ...prev,
-          array: [
-            ...prev.array.slice(
+          columns: [
+            ...prev.columns.slice(
               0,
-              prev.array.findIndex((item: TTask) => item.id === id)
+              prev.columns.findIndex((column) =>
+                column.array.some((item) => item.id === id)
+              )
             ),
             {
-              id,
-              title: taskName,
-              description: taskDescription,
-              status,
+              ...prev.columns[
+                prev.columns.findIndex((column) =>
+                  column.array.some((item) => item.id === id)
+                )
+              ],
+              array: [
+                ...prev.columns[
+                  prev.columns.findIndex((column) =>
+                    column.array.some((item) => item.id === id)
+                  )
+                ].array.slice(
+                  0,
+                  prev.columns[
+                    prev.columns.findIndex((column) =>
+                      column.array.some((item) => item.id === id)
+                    )
+                  ].array.findIndex((item: TTask) => item.id === id)
+                ),
+                {
+                  id,
+                  title: taskName,
+                  description: taskDescription,
+                  status,
+                },
+                ...prev.columns[
+                  prev.columns.findIndex((column) =>
+                    column.array.some((item) => item.id === id)
+                  )
+                ].array.slice(
+                  prev.columns[
+                    prev.columns.findIndex((column) =>
+                      column.array.some((item) => item.id === id)
+                    )
+                  ].array.findIndex((item: TTask) => item.id === id) + 1,
+                  prev.columns[
+                    prev.columns.findIndex((column) =>
+                      column.array.some((item) => item.id === id)
+                    )
+                  ].array.length
+                ),
+              ],
             },
-            ...prev.array.slice(
-              prev.array.findIndex((item: TTask) => item.id === id) + 1,
-              prev.array.length
+            ...prev.columns.slice(
+              prev.columns.findIndex((column) =>
+                column.array.some((item) => item.id === id)
+              ) + 1,
+              prev.columns.length
             ),
           ],
         }
@@ -231,12 +284,15 @@ const Board: FC<BoardProps> = ({ pathname }) => {
             }
             onAddNewColumn={handleAddNewColumn}
             onDeleteBoard={handleDeleteBoard}
+            sortingParameter={sortingParameter}
+            onSetSortingParameter={(e) => {
+              setSortingParameter((e.target as HTMLButtonElement).id);
+            }}
+            columnsLength={boardData?.columns.length}
           />
-          {boardData && (
+          {boardData.columns.length ? (
             <DragAndDrop
               columns={boardData?.columns}
-              itemField={itemField}
-              itemsOriginal={boardData?.array}
               onChangeOver={handleDragOver}
               onChangeEnd={handleDragEnd}
               onSetCurrentTaskData={(taskData, color) =>
@@ -247,7 +303,24 @@ const Board: FC<BoardProps> = ({ pathname }) => {
                   (prev: TBoardData | null) =>
                     prev && {
                       ...prev,
-                      array: newArray,
+                      columns: prev.columns.map((item) => {
+                        const resultArray = newArray
+                          .map((value: any) =>
+                            value.array.some(
+                              (parameter: any) => parameter.status === item.name
+                            )
+                              ? [...value.array]
+                              : null
+                          )
+                          .filter(
+                            (parameter: any) => parameter !== null && parameter
+                          );
+
+                        return {
+                          ...item,
+                          array: resultArray[0] || [],
+                        };
+                      }),
                     }
                 )
               }
@@ -255,24 +328,49 @@ const Board: FC<BoardProps> = ({ pathname }) => {
               onDeleteColumn={handleDeleteColumn}
               onChangeColumnColor={handleChangeColumnColor}
               onMoveColumn={handleMoveColumn}
+              sortingParameter={sortingParameter}
             />
+          ) : (
+            <div className="w-96 pt-28 ml-auto mr-auto relative">
+              <div className="w-[200px] h-[200px] ml-auto mr-auto relative flex justify-center items-center rounded-[50%] overflow-hidden">
+                <Image
+                  src="/giphy.gif"
+                  alt="Nothing gif"
+                  priority
+                  width={200}
+                  height={0}
+                  className="ml-auto mr-auto absolute"
+                />
+              </div>
+              <p className="text-center text-lightGray mt-8">
+                Add your first column
+              </p>
+            </div>
           )}
         </div>
       ) : (
         <Loading />
       )}
       <ModalReadAndEditTask
+        columns={boardData?.columns}
         currentTaskData={currentTaskData}
         resetTaskModal={() => setCurrentTaskData(null)}
         onUpdateTask={handleUpdateTask}
-        onDeleteTask={(id) => {
+        onDeleteTask={(id, key) => {
           setBoardData(
-            (prev: TBoardData | null) =>
+            (prev: any) =>
               prev && {
                 ...prev,
-                array: prev.array.filter((item: TTask) => {
-                  return item.id !== id;
-                }),
+                columns: prev.columns.map((item: TColumn) =>
+                  item.name === key
+                    ? {
+                        ...item,
+                        array: [
+                          ...item.array.filter((value) => value.id !== id),
+                        ],
+                      }
+                    : item
+                ),
               }
           );
         }}
@@ -285,14 +383,23 @@ const Board: FC<BoardProps> = ({ pathname }) => {
             (prev: TBoardData | null) =>
               prev && {
                 ...prev,
-                array: [
-                  ...prev.array,
-                  {
-                    id,
-                    title: taskName,
-                    description: taskDescription,
-                    status: key,
-                  },
+                columns: [
+                  ...prev.columns.map((item) =>
+                    item.name === key
+                      ? {
+                          ...item,
+                          array: [
+                            ...item.array,
+                            {
+                              id,
+                              title: taskName,
+                              description: taskDescription,
+                              status: key,
+                            },
+                          ],
+                        }
+                      : item
+                  ),
                 ],
               }
           )

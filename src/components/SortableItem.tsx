@@ -8,7 +8,6 @@ import { RxDragHandleDots1 } from "react-icons/rx";
 interface SortableItemProps {
   item: TTask;
   id: string;
-  itemField: TItemField;
   columns: TColumn[];
   onSetCurrentTaskData: (taskData: TTask | null, color: string) => void;
 }
@@ -17,7 +16,6 @@ const SortableItem: FC<SortableItemProps> = ({
   columns,
   id,
   item,
-  itemField,
   onSetCurrentTaskData,
 }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
@@ -35,7 +33,7 @@ const SortableItem: FC<SortableItemProps> = ({
       {...attributes}
       {...listeners}
       className={twMerge(
-        "text-lg border bg-gray-50 rounded-custom p-3 pt-4 mb-2  last-of-type:mb-0 relative z-[40] overflow-hidden"
+        "text-lg border dark:border-halfLightGray bg-gray-50 dark:bg-darkWhite rounded-custom p-3 pt-4 mb-2  last-of-type:mb-0 relative z-[40] overflow-hidden"
       )}
       onClick={() =>
         onSetCurrentTaskData(
@@ -61,7 +59,13 @@ const SortableItem: FC<SortableItemProps> = ({
           }30`,
         }}
       >
-        {item[itemField]}
+        {
+          columns[
+            columns.findIndex((column) =>
+              column.array.some((value) => value.id === item.id)
+            )
+          ]?.name
+        }
       </span>
       <p
         className="text-base text-halfLightGray h-[48px] text-ellipsis overflow-hidden"

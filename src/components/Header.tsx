@@ -1,6 +1,13 @@
 import Image from "next/image";
-import { MdFormatListBulleted, MdClose } from "react-icons/md";
-import { FC } from "react";
+import {
+  MdFormatListBulleted,
+  MdClose,
+  MdSunny,
+  MdNightlight,
+} from "react-icons/md";
+import { FC, useContext } from "react";
+import { twMerge } from "tailwind-merge";
+import { ThemeContext } from "./ThemeProvider";
 
 interface HeaderProps {
   isBoardsList: boolean;
@@ -8,8 +15,10 @@ interface HeaderProps {
 }
 
 const Header: FC<HeaderProps> = ({ isBoardsList, onToggleBoardsList }) => {
+  const theme = useContext(ThemeContext);
+
   return (
-    <div className="h-[70px] mb-6 flex px-6 items-center relative bg-mainWhite shadow-[0px_0px_26px_-12px_rgba(0,0,0,0.10)]">
+    <div className="h-[70px] mb-3 flex px-6 items-center relative bg-mainWhite shadow-[0px_0px_26px_-12px_rgba(0,0,0,0.10)]">
       <button
         type="button"
         onClick={onToggleBoardsList}
@@ -35,6 +44,18 @@ const Header: FC<HeaderProps> = ({ isBoardsList, onToggleBoardsList }) => {
         height={0}
         className="absolute left-1/2 -translate-x-1/2"
       />
+      <div className="ml-auto">
+        <button
+          className={twMerge(
+            theme?.isLightTheme ? "text-[orange]" : "text-accent",
+            "button-small text-xl w-10 h-10"
+          )}
+          type="button"
+          onClick={() => theme?.setIsLightTheme(!theme?.isLightTheme)}
+        >
+          {theme?.isLightTheme ? <MdSunny /> : <MdNightlight />}
+        </button>
+      </div>
     </div>
   );
 };

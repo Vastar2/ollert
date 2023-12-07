@@ -4,13 +4,12 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { useDroppable } from "@dnd-kit/core";
-import { TItemField, TTask, TColumn } from "../types";
+import { TTask, TColumn } from "../types";
 import ListOfItems from "./ListOfItems";
 
 interface SortableListProps {
   items: TTask[];
   id: string;
-  itemField: TItemField;
   columns: TColumn[];
   onSetCurrentTaskData: (taskData: TTask | null, color: string) => void;
 }
@@ -18,7 +17,6 @@ interface SortableListProps {
 const SortableList: FC<SortableListProps> = ({
   items,
   id,
-  itemField,
   columns,
   onSetCurrentTaskData,
 }) => {
@@ -38,7 +36,6 @@ const SortableList: FC<SortableListProps> = ({
             <ListOfItems
               items={items}
               id={id}
-              itemField={itemField}
               columns={columns}
               onSetCurrentTaskData={onSetCurrentTaskData}
             />
@@ -48,7 +45,6 @@ const SortableList: FC<SortableListProps> = ({
             <ListOfItems
               items={items}
               id={id}
-              itemField={itemField}
               columns={columns}
               onSetCurrentTaskData={onSetCurrentTaskData}
             />

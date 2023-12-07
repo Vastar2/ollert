@@ -1,8 +1,9 @@
 import { FC, useEffect, useState } from "react";
-import { TTask } from "../types";
+import { TTask, TColumn } from "../types";
 import { MdEdit, MdClose, MdOutlineDone, MdDelete } from "react-icons/md";
 
 interface ModalReadAndEditTaskProps {
+  columns: TColumn[] | undefined;
   currentTaskData: null | TTask;
   resetTaskModal: () => void;
   onUpdateTask: (
@@ -11,10 +12,11 @@ interface ModalReadAndEditTaskProps {
     editDescription: string,
     status: string
   ) => void;
-  onDeleteTask: (id: number) => void;
+  onDeleteTask: (id: number, key: string) => void;
 }
 
 const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
+  columns,
   currentTaskData,
   resetTaskModal,
   onUpdateTask,
@@ -29,7 +31,7 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
     setEditDescription(currentTaskData?.description || "");
   }, [currentTaskData?.description, currentTaskData?.title]);
 
-  if (!currentTaskData) return null;
+  if (!currentTaskData || !columns) return null;
 
   return (
     <div
@@ -55,7 +57,15 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
               backgroundColor: `${currentTaskData.color}30`,
             }}
           >
-            <p className="text-halfLightGray">{currentTaskData.status}</p>
+            <p className="text-halfLightGray dark:text-lightGray">
+              {
+                columns[
+                  columns.findIndex((column) =>
+                    column.array.some((item) => item.id === currentTaskData.id)
+                  )
+                ].name
+              }
+            </p>
           </div>
         </div>
         {isEditMode ? (
@@ -95,7 +105,14 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
           <button
             className="text-xl button-small"
             onClick={() => {
-              onDeleteTask(currentTaskData.id);
+              onDeleteTask(
+                currentTaskData.id,
+                columns[
+                  columns.findIndex((column) =>
+                    column.array.some((item) => item.id === currentTaskData.id)
+                  )
+                ].name
+              );
               resetTaskModal();
               setIsEditMode(false);
             }}
@@ -114,7 +131,13 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
                   currentTaskData.id,
                   editText,
                   editDescription,
-                  currentTaskData.status
+                  columns[
+                    columns.findIndex((column) =>
+                      column.array.some(
+                        (item) => item.id === currentTaskData.id
+                      )
+                    )
+                  ].name
                 );
               }
               setIsEditMode(!isEditMode);

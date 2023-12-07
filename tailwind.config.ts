@@ -6,6 +6,7 @@ const config: Config = {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  darkMode: "class",
   theme: {
     extend: {
       backgroundImage: {
@@ -26,8 +27,8 @@ const config: Config = {
         darkWhite: "var(--dark-white)",
         mainGray: "var(--main-gray)",
         lightGray: "var(--light-gray)",
-        halfLightGray: "#767676",
-        superLightGray: "#dbdbdb",
+        halfLightGray: "var(--half-light-gray)",
+        superLightGray: "var(--super-light-gray)",
         accent: "var(--accent)",
         accentHover: "var(--accent-hover)",
       },

@@ -3,6 +3,7 @@ import { FC, useEffect, useState } from "react";
 import BoardsList from "./BoardsList";
 import BoardsListNewBoard from "./BoardsListNewBoard";
 import { TBoardsListData } from "../types";
+import { useRouter } from "next/navigation";
 
 interface BoardsListModalProps {
   isBoardsList: boolean;
@@ -18,6 +19,7 @@ const BoardsListModal: FC<BoardsListModalProps> = ({
   const [boardsListData, setBoardsListData] = useState<
     TBoardsListData[] | null
   >(null);
+  const { push } = useRouter();
 
   useEffect(() => {
     const storedData = localStorage.getItem("boardData");
@@ -25,9 +27,9 @@ const BoardsListModal: FC<BoardsListModalProps> = ({
     setBoardsListData(
       storedData &&
         JSON.parse(storedData).map((item: TBoardsListData) => ({
-          boardId: item.boardId,
-          boardName: item.boardName,
-          isFavorite: item.isFavorite,
+          boardId: item?.boardId,
+          boardName: item?.boardName,
+          isFavorite: item?.isFavorite,
         }))
     );
   }, []);
@@ -36,8 +38,6 @@ const BoardsListModal: FC<BoardsListModalProps> = ({
     setIsNewBoard(false);
     setBoardName("");
   }, [isBoardsList]);
-
-  if (!isBoardsList) return null;
 
   const handleAddBoard = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -51,7 +51,6 @@ const BoardsListModal: FC<BoardsListModalProps> = ({
           boardName: boardName,
           isFavorite: false,
           columns: [],
-          array: [],
         },
         ...(Array.isArray(JSON.parse(localData)) ? JSON.parse(localData) : []),
       ];
@@ -69,6 +68,7 @@ const BoardsListModal: FC<BoardsListModalProps> = ({
       );
 
       localStorage.setItem("boardData", JSON.stringify(updatedData));
+      push(`/board/${id}`);
     } else {
       const updatedData = [
         {
@@ -76,7 +76,6 @@ const BoardsListModal: FC<BoardsListModalProps> = ({
           boardName: boardName,
           isFavorite: false,
           columns: [],
-          array: [],
         },
       ];
 
@@ -89,6 +88,7 @@ const BoardsListModal: FC<BoardsListModalProps> = ({
       ]);
 
       localStorage.setItem("boardData", JSON.stringify(updatedData));
+      push(`/board/${id}`);
     }
 
     setIsNewBoard(false);
@@ -97,7 +97,7 @@ const BoardsListModal: FC<BoardsListModalProps> = ({
 
   return (
     <div
-      className="absolute z-50 top-[70px] left-0 w-full h-[calc(100vh-70px)] bg-[#00000040]"
+      className="absolute z-50 top-[70px] left-0 w-full h-[calc(100vh-70px)] bg-[#00000040] dark:bg-[#00000020]"
       onClick={(e) => {
         if (e.target === e.currentTarget) {
           onToggleBoardsList();
