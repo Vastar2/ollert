@@ -1,6 +1,14 @@
 import { FC, useEffect, useState } from "react";
 import { TTask, TColumn } from "../types";
-import { MdEdit, MdClose, MdOutlineDone, MdDelete } from "react-icons/md";
+import {
+  MdEdit,
+  MdClose,
+  MdOutlineDone,
+  MdDelete,
+  MdCheckBoxOutlineBlank,
+  MdCheckBox,
+} from "react-icons/md";
+import { twMerge } from "tailwind-merge";
 
 interface ModalReadAndEditTaskProps {
   columns: TColumn[] | undefined;
@@ -10,9 +18,11 @@ interface ModalReadAndEditTaskProps {
     id: number,
     editText: string,
     editDescription: string,
-    status: string
+    status: string,
+    checklist: { checkId: number; isChecked: boolean; content: string }[]
   ) => void;
   onDeleteTask: (id: number, key: string) => void;
+  // onToggleIsChecked: (taskId: number, checkId: number) => void;
 }
 
 const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
@@ -21,15 +31,25 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
   resetTaskModal,
   onUpdateTask,
   onDeleteTask,
+  // onToggleIsChecked,
 }) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [editText, setEditText] = useState("");
   const [editDescription, setEditDescription] = useState("");
+  const [editChecklist, setEditChecklist] = useState<
+    { checkId: number; isChecked: boolean; content: string }[]
+  >([]);
+
+  useEffect(() => {
+    setEditChecklist(currentTaskData?.checklist ?? []);
+  }, [currentTaskData?.checklist]);
 
   useEffect(() => {
     setEditText(currentTaskData?.title || "");
     setEditDescription(currentTaskData?.description || "");
   }, [currentTaskData?.description, currentTaskData?.title]);
+
+  useEffect(() => {}, []);
 
   if (!currentTaskData || !columns) return null;
 
@@ -86,7 +106,7 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
           </p>
         )}
         {isEditMode ? (
-          <label className="block">
+          <label className="block  mb-3">
             <p className="text-sm text-lightGray mb-1">Description</p>
             <textarea
               value={editDescription}
@@ -97,10 +117,58 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
             />
           </label>
         ) : (
-          <p className="text-base text-halfLightGray">
+          <p className="text-base text-halfLightGray mb-3">
             {currentTaskData.description}
           </p>
         )}
+        <label className="block">
+          {isEditMode && (
+            <p className="text-sm text-lightGray mb-1">
+              Checklist{" "}
+              <span className="italic">({editChecklist.length} tasks)</span>
+            </p>
+          )}
+          <ul className="mt-2">
+            {editChecklist?.map((item) => (
+              <li
+                key={item.checkId}
+                className={twMerge(
+                  item.isChecked
+                    ? "text-lightGray line-through"
+                    : "text-mainGray",
+                  "w-full flex gap-1 whitespace-nowrap text-ellipsis overflow-hidden mb-1 last-of-type:mb-0"
+                )}
+              >
+                <button
+                  type="button"
+                  onClick={() =>
+                    onUpdateTask(
+                      currentTaskData.id,
+                      editText,
+                      editDescription,
+                      columns[
+                        columns.findIndex((column) =>
+                          column.array.some(
+                            (item) => item.id === currentTaskData.id
+                          )
+                        )
+                      ].name,
+                      editChecklist.map((value) => {
+                        console.log(value, item);
+                        return value.checkId === item.checkId
+                          ? { ...value, isChecked: !value.isChecked }
+                          : value;
+                      })
+                    )
+                  }
+                >
+                  {item.isChecked ? <MdCheckBox /> : <MdCheckBoxOutlineBlank />}
+                </button>
+                <p> {item.content}</p>
+              </li>
+            ))}
+          </ul>
+        </label>
         <div className="absolute top-4 right-3 flex items-center">
           <button
             className="text-xl button-small"
@@ -137,7 +205,8 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
                         (item) => item.id === currentTaskData.id
                       )
                     )
-                  ].name
+                  ].name,
+                  editChecklist
                 );
               }
               setIsEditMode(!isEditMode);

@@ -185,7 +185,8 @@ const Board: FC<BoardProps> = ({ pathname }) => {
     id: number,
     taskName: string,
     taskDescription: string,
-    status: string
+    status: string,
+    checklist: { checkId: number; isChecked: boolean; content: string }[]
   ) => {
     setBoardData(
       (prev: TBoardData | null) =>
@@ -222,6 +223,7 @@ const Board: FC<BoardProps> = ({ pathname }) => {
                   title: taskName,
                   description: taskDescription,
                   status,
+                  checklist,
                 },
                 ...prev.columns[
                   prev.columns.findIndex((column) =>
@@ -252,7 +254,12 @@ const Board: FC<BoardProps> = ({ pathname }) => {
     );
     setCurrentTaskData(
       (prev) =>
-        prev && { ...prev, title: taskName, description: taskDescription }
+        prev && {
+          ...prev,
+          title: taskName,
+          description: taskDescription,
+          checklist: checklist,
+        }
     );
   };
 
@@ -374,11 +381,14 @@ const Board: FC<BoardProps> = ({ pathname }) => {
               }
           );
         }}
+        // onToggleIsChecked={(taskId, checkId) =>
+        //   setBoardData((prev: any) => prev)
+        // }
       />
       <ModalCreateTask
         newTaskStatus={newTaskStatus}
         resetNewTaskStatus={() => setNewTaskStatus(null)}
-        onSetNewTask={(id, taskName, taskDescription, key) =>
+        onSetNewTask={(id, taskName, taskDescription, key, checklist) =>
           setBoardData(
             (prev: TBoardData | null) =>
               prev && {
@@ -395,6 +405,7 @@ const Board: FC<BoardProps> = ({ pathname }) => {
                               title: taskName,
                               description: taskDescription,
                               status: key,
+                              checklist: checklist,
                             },
                           ],
                         }

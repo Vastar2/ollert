@@ -41,7 +41,7 @@ const BoardFilters: FC<BoardFiltersProps> = ({
         onDeleteBoard={() => onDeleteBoard(boardId)}
         onChangeName={() => onChangeName(editedBoardName)}
       />
-      {columnsLength > 1 && (
+      {columnsLength > 1 && !editedBoardName && (
         <div className="flex items-center">
           <p className="text-lightGray mr-2">Sort by:</p>
           <button

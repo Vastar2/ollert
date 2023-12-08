@@ -9,7 +9,8 @@ interface ModalReadAndEditTaskProps {
     id: number,
     taskName: string,
     taskDescription: string,
-    key: string
+    key: string,
+    checklist: { checkId: number; isChecked: boolean; content: string }[]
   ) => void;
 }
 
@@ -20,6 +21,10 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
 }) => {
   const [taskName, setTaskName] = useState("");
   const [taskDescription, setTaskDescription] = useState("");
+  const [checklist, setChecklist] = useState<
+    { checkId: number; isChecked: boolean; content: string }[]
+  >([]);
+  const [checklistItem, setChecklistItem] = useState("");
 
   if (!newTaskStatus) return null;
 
@@ -27,9 +32,11 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
     e.preventDefault();
 
     const id = Math.floor(Math.random() * (99999999 - 11111111 + 1)) + 11111111;
-    onSetNewTask(id, taskName, taskDescription, newTaskStatus.key);
+    onSetNewTask(id, taskName, taskDescription, newTaskStatus.key, checklist);
     setTaskName("");
     setTaskDescription("");
+    setChecklistItem("");
+    setChecklist([]);
     resetNewTaskStatus();
   };
 
@@ -40,11 +47,13 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
         if (e.target === e.currentTarget) {
           setTaskName("");
           setTaskDescription("");
+          setChecklistItem("");
+          setChecklist([]);
           resetNewTaskStatus();
         }
       }}
     >
-      <div className="basis-[360px] container-main pt-0 relative overflow-hidden">
+      <div className="basis-[640px] container-main pt-0 relative overflow-hidden">
         <div
           className="w-1/2 h-2 ml-auto mr-auto rounded-b-custom"
           style={{
@@ -65,9 +74,9 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
         <form onSubmit={(e) => handleSubmit(e)}>
           <div>
             <label>
-              Task name
+              <p className="text-sm text-lightGray">Task name</p>
               <input
-                className="mt-3 mb-5 input-main"
+                className="mt-1 input-main max-w-[200px]"
                 type="text"
                 value={taskName}
                 onChange={(e) => setTaskName(e.target.value)}
@@ -75,19 +84,64 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
               />
             </label>
           </div>
-          <div>
+          <div className="mb-4 mt-4">
             <label>
-              Task description
+              <p className="text-sm text-lightGray">Task description</p>
               <textarea
-                className="mt-3 h-[140px] resize-none mb-5 input-main"
+                className="mt-1 h-[140px] resize-none input-main"
                 value={taskDescription}
                 onChange={(e) => setTaskDescription(e.target.value)}
               />
             </label>
           </div>
+          <div className=" mb-4">
+            <label className="mt-2">
+              <p className="text-sm text-lightGray">Checklist</p>
+              <div className="mt-1 flex gap-2">
+                <input
+                  className="input-main max-w-[200px]"
+                  type="text"
+                  value={checklistItem}
+                  onChange={(e) => setChecklistItem(e.target.value)}
+                />
+                {checklistItem && (
+                  <button
+                    type="button"
+                    className="block px-4 border border-lightGray  text-mainGray rounded-custom duration-300 hover:bg-darkWhite"
+                    onClick={() => {
+                      setChecklistItem("");
+                      setChecklist([
+                        ...checklist,
+                        {
+                          checkId:
+                            Math.floor(
+                              Math.random() * (9999999999 - 1111111111 + 1)
+                            ) + 1111111111,
+                          isChecked: false,
+                          content: checklistItem,
+                        },
+                      ]);
+                    }}
+                  >
+                    Add
+                  </button>
+                )}
+              </div>
+              <ul className="mt-2 flex flex-wrap gap-1">
+                {checklist?.map((item, index) => (
+                  <li
+                    key={index}
+                    className="max-w-[200px] whitespace-nowrap text-ellipsis overflow-hidden py-1 px-2 bg-darkWhite rounded-custom text-lightGray"
+                  >
+                    {item.content}
+                  </li>
+                ))}
+              </ul>
+            </label>
+          </div>
           <button
             type="submit"
-            className="flex items-center duration-300 hover:bg-darkWhite ml-auto mr-auto border border-accent w-full justify-center py-2 rounded-custom text-accent"
+            className="max-w-[200px] flex items-center duration-300 hover:bg-darkWhite border border-accent w-full justify-center py-2 rounded-custom text-accent"
           >
             Create
           </button>
@@ -98,6 +152,8 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
           onClick={() => {
             setTaskName("");
             setTaskDescription("");
+            setChecklistItem("");
+            setChecklist([]);
             resetNewTaskStatus();
           }}
           type="button"
