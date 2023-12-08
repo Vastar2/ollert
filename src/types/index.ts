@@ -18,6 +18,7 @@ export interface TTask {
   id: number;
   title: string;
   description: string;
+  checklist: { checkId: number; isChecked: boolean; content: string }[];
   color?: string;
   status?: string;
 }
