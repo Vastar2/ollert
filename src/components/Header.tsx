@@ -27,12 +27,12 @@ const Header: FC<HeaderProps> = ({ isBoardsList, onToggleBoardsList }) => {
       >
         {!isBoardsList ? (
           <>
-            My boards
+            <p>My boards</p>
             <MdFormatListBulleted className="ml-1 flex justify-center items-center text-xl text-accent" />
           </>
         ) : (
           <>
-            Close
+            <p>Close</p>
             <MdClose className="ml-1 flex justify-center items-center text-xl text-accent" />
           </>
         )}

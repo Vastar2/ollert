@@ -10,6 +10,7 @@ interface LayoutProps {
 
 const Layout: FC<LayoutProps> = ({ children }) => {
   const [isBoardsList, setIsBoardsList] = useState(false);
+
   return (
     <ThemeProvider>
       <div className="h-full relative overflow-hidden">
@@ -24,7 +25,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
             onToggleBoardsList={() => setIsBoardsList(!isBoardsList)}
           />
         )}
-      </div>{" "}
+      </div>
       <Toaster />
     </ThemeProvider>
   );

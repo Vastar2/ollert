@@ -13,7 +13,6 @@ const App = () => {
 
   useEffect(() => {
     const storedData = localStorage.getItem("boardData");
-
     setBoardsListData(
       storedData &&
         JSON.parse(storedData).map((item: TBoardsListData) => ({
@@ -53,7 +52,9 @@ const App = () => {
           ) : (
             <div className="container-main w-[30%] flex items-center justify-center">
               <MdHistory className="text-lightGray mr-2" />
-              <p className="text-center text-lightGray">History is clear</p>
+              <p className="text-center text-lightGray">
+                List of boards is clear
+              </p>
             </div>
           )}
         </div>

@@ -26,7 +26,6 @@ const BoardsListModal: FC<BoardsListModalProps> = ({
 
   useEffect(() => {
     const storedData = localStorage.getItem("boardData");
-
     setBoardsListData(
       storedData &&
         JSON.parse(storedData).map((item: TBoardsListData) => ({
@@ -47,61 +46,56 @@ const BoardsListModal: FC<BoardsListModalProps> = ({
     const id = Math.floor(Math.random() * (99999999 - 11111111 + 1)) + 11111111;
     const localData = localStorage.getItem("boardData");
 
-    if (boardName.length > 2) {
-      if (localData) {
-        const updatedData = [
-          {
-            boardId: id,
-            boardName: boardName,
-            isFavorite: false,
-            columns: [],
-          },
-          ...(Array.isArray(JSON.parse(localData))
-            ? JSON.parse(localData)
-            : []),
-        ];
-
-        setBoardsListData(
-          (prev: TBoardsListData[] | null) =>
-            prev && [
-              ...prev,
-              {
-                boardId: id,
-                boardName: boardName,
-                isFavorite: false,
-              },
-            ]
-        );
-
-        localStorage.setItem("boardData", JSON.stringify(updatedData));
-        push(`/board/${id}`);
-      } else {
-        const updatedData = [
-          {
-            boardId: id,
-            boardName: boardName,
-            isFavorite: false,
-            columns: [],
-          },
-        ];
-
-        setBoardsListData([
-          {
-            boardId: id,
-            boardName: boardName,
-            isFavorite: false,
-          },
-        ]);
-
-        localStorage.setItem("boardData", JSON.stringify(updatedData));
-        push(`/board/${id}`);
-      }
-
-      setIsNewBoard(false);
-      setBoardName("");
-    } else {
+    if (boardName.length < 3) {
       errorName();
+      return;
     }
+
+    if (localData) {
+      const updatedData = [
+        {
+          boardId: id,
+          boardName: boardName,
+          isFavorite: false,
+          columns: [],
+        },
+        ...(Array.isArray(JSON.parse(localData)) ? JSON.parse(localData) : []),
+      ];
+      setBoardsListData(
+        (prev: TBoardsListData[] | null) =>
+          prev && [
+            ...prev,
+            {
+              boardId: id,
+              boardName: boardName,
+              isFavorite: false,
+            },
+          ]
+      );
+      localStorage.setItem("boardData", JSON.stringify(updatedData));
+      push(`/board/${id}`);
+    } else {
+      const updatedData = [
+        {
+          boardId: id,
+          boardName: boardName,
+          isFavorite: false,
+          columns: [],
+        },
+      ];
+      setBoardsListData([
+        {
+          boardId: id,
+          boardName: boardName,
+          isFavorite: false,
+        },
+      ]);
+      localStorage.setItem("boardData", JSON.stringify(updatedData));
+      push(`/board/${id}`);
+    }
+
+    setIsNewBoard(false);
+    setBoardName("");
   };
 
   return (
