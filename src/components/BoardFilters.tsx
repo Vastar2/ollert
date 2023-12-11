@@ -2,6 +2,7 @@ import { FC, useState } from "react";
 import BoardFiltersTitle from "./BoardFiltersTitle";
 import BoardFiltersTitleNewColumn from "./BoardFiltersTitleNewColumn";
 import { twMerge } from "tailwind-merge";
+import { TColumn } from "../types";
 
 interface BoardFiltersProps {
   isFavorite: boolean | undefined;
@@ -14,6 +15,7 @@ interface BoardFiltersProps {
   sortingParameter: string;
   onSetSortingParameter: (e: any) => void;
   columnsLength: number;
+  boardColumns: TColumn[];
 }
 
 const BoardFilters: FC<BoardFiltersProps> = ({
@@ -27,6 +29,7 @@ const BoardFilters: FC<BoardFiltersProps> = ({
   sortingParameter,
   onSetSortingParameter,
   columnsLength,
+  boardColumns,
 }) => {
   const [editedBoardName, setEditedBoardName] = useState("");
 
@@ -68,7 +71,10 @@ const BoardFilters: FC<BoardFiltersProps> = ({
           </button>
         </div>
       )}
-      <BoardFiltersTitleNewColumn onAddNewColumn={onAddNewColumn} />
+      <BoardFiltersTitleNewColumn
+        onAddNewColumn={onAddNewColumn}
+        boardColumns={boardColumns}
+      />
     </div>
   );
 };

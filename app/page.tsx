@@ -2,9 +2,9 @@
 import Layout from "../src/components/Layout";
 import { useState, useEffect } from "react";
 import { TBoardsListData } from "../src/types";
-import { useRouter } from "next/navigation";
 import { MdStar, MdStarBorder } from "react-icons/md";
 import Link from "next/link";
+import { MdArrowForwardIos, MdHistory } from "react-icons/md";
 
 const App = () => {
   const [boardsListData, setBoardsListData] = useState<
@@ -26,31 +26,38 @@ const App = () => {
 
   return (
     <Layout>
-      {boardsListData?.length ? (
-        <ul className="px-6 select-none flex gap-4 justify-center max-w-[648px] ml-auto mr-auto">
-          {boardsListData?.map((item) => (
-            <li key={item.boardId} className="w-[200px] h-[80px]">
-              <Link
-                className="container-main duration-300 hover:bg-darkWhite flex items-center h-full"
-                href={{ pathname: `/board/${item.boardId}` }}
-              >
-                <div className="mr-2">
-                  {item.isFavorite ? (
-                    <MdStar className="text-2xl text-[orange]" />
-                  ) : (
-                    <MdStarBorder className="text-2xl" />
-                  )}
-                </div>
-                <p>{item.boardName}</p>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <div>
-          <p className="text-center text-lightGray">Add your first board</p>
+      <div className="h-[calc(100%-100px)] px-6 flex justify-center gap-4">
+        <div className="w-[30%] px-6 select-none container-main">
+          <p className="mb-4 text-center text-superLightGray">My boards</p>
+          {boardsListData?.length ? (
+            <ul className="overflow-auto">
+              {boardsListData?.map((item) => (
+                <li key={item.boardId}>
+                  <Link
+                    className="px-4 py-2 rounded-custom group duration-300 hover:bg-darkWhite flex items-center h-full"
+                    href={{ pathname: `/board/${item.boardId}` }}
+                  >
+                    <div className="mr-2">
+                      {item.isFavorite ? (
+                        <MdStar className="text-2xl text-[orange]" />
+                      ) : (
+                        <MdStarBorder className="text-2xl" />
+                      )}
+                    </div>
+                    <p>{item.boardName}</p>
+                    <MdArrowForwardIos className="ml-auto opacity-0 duration-300 text-lightGray group-hover:opacity-100" />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="container-main w-[30%] flex items-center justify-center">
+              <MdHistory className="text-lightGray mr-2" />
+              <p className="text-center text-lightGray">History is clear</p>
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </Layout>
   );
 };

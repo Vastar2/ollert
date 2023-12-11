@@ -2,16 +2,23 @@ import { MdAdd, MdClose } from "react-icons/md";
 import { twMerge } from "tailwind-merge";
 import { HexColorPicker } from "react-colorful";
 import { FC, useState } from "react";
+import toast from "react-hot-toast";
+import { TColumn } from "../types";
 
 interface BoardFiltersTitleNewColumnProps {
   onAddNewColumn: (newColumnName: string, newColumnColor: string) => void;
+  boardColumns: TColumn[];
 }
 
 const BoardFiltersTitleNewColumn: FC<BoardFiltersTitleNewColumnProps> = ({
   onAddNewColumn,
+  boardColumns,
 }) => {
   const [newColumnName, setNewColumnName] = useState<null | string>(null);
   const [newColumnColor, setNewColumnColor] = useState("#EE4B4B");
+  const errorName = () =>
+    toast.error("The name must be at least 3 characters long");
+  const errorNameExist = () => toast.error("This name is already exists");
 
   return (
     <div className="relative">
@@ -56,8 +63,16 @@ const BoardFiltersTitleNewColumn: FC<BoardFiltersTitleNewColumnProps> = ({
             type="button"
             className="flex items-center duration-300 hover:bg-darkWhite ml-auto mr-auto border border-accent w-full justify-center py-2 rounded-custom text-accent"
             onClick={() => {
-              onAddNewColumn(newColumnName, newColumnColor);
-              setNewColumnName(null);
+              if (newColumnName.length < 3) {
+                errorName();
+              } else if (
+                boardColumns.some((value) => value.name === newColumnName)
+              ) {
+                errorNameExist();
+              } else {
+                onAddNewColumn(newColumnName, newColumnColor);
+                setNewColumnName(null);
+              }
             }}
           >
             Create

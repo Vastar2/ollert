@@ -4,6 +4,7 @@ import BoardsList from "./BoardsList";
 import BoardsListNewBoard from "./BoardsListNewBoard";
 import { TBoardsListData } from "../types";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 interface BoardsListModalProps {
   isBoardsList: boolean;
@@ -20,6 +21,8 @@ const BoardsListModal: FC<BoardsListModalProps> = ({
     TBoardsListData[] | null
   >(null);
   const { push } = useRouter();
+  const errorName = () =>
+    toast.error("The name must be at least 3 characters long");
 
   useEffect(() => {
     const storedData = localStorage.getItem("boardData");
@@ -44,55 +47,61 @@ const BoardsListModal: FC<BoardsListModalProps> = ({
     const id = Math.floor(Math.random() * (99999999 - 11111111 + 1)) + 11111111;
     const localData = localStorage.getItem("boardData");
 
-    if (localData) {
-      const updatedData = [
-        {
-          boardId: id,
-          boardName: boardName,
-          isFavorite: false,
-          columns: [],
-        },
-        ...(Array.isArray(JSON.parse(localData)) ? JSON.parse(localData) : []),
-      ];
+    if (boardName.length > 2) {
+      if (localData) {
+        const updatedData = [
+          {
+            boardId: id,
+            boardName: boardName,
+            isFavorite: false,
+            columns: [],
+          },
+          ...(Array.isArray(JSON.parse(localData))
+            ? JSON.parse(localData)
+            : []),
+        ];
 
-      setBoardsListData(
-        (prev: TBoardsListData[] | null) =>
-          prev && [
-            ...prev,
-            {
-              boardId: id,
-              boardName: boardName,
-              isFavorite: false,
-            },
-          ]
-      );
+        setBoardsListData(
+          (prev: TBoardsListData[] | null) =>
+            prev && [
+              ...prev,
+              {
+                boardId: id,
+                boardName: boardName,
+                isFavorite: false,
+              },
+            ]
+        );
 
-      localStorage.setItem("boardData", JSON.stringify(updatedData));
-      push(`/board/${id}`);
+        localStorage.setItem("boardData", JSON.stringify(updatedData));
+        push(`/board/${id}`);
+      } else {
+        const updatedData = [
+          {
+            boardId: id,
+            boardName: boardName,
+            isFavorite: false,
+            columns: [],
+          },
+        ];
+
+        setBoardsListData([
+          {
+            boardId: id,
+            boardName: boardName,
+            isFavorite: false,
+          },
+        ]);
+
+        localStorage.setItem("boardData", JSON.stringify(updatedData));
+        push(`/board/${id}`);
+      }
+
+      setIsNewBoard(false);
+      setBoardName("");
     } else {
-      const updatedData = [
-        {
-          boardId: id,
-          boardName: boardName,
-          isFavorite: false,
-          columns: [],
-        },
-      ];
-
-      setBoardsListData([
-        {
-          boardId: id,
-          boardName: boardName,
-          isFavorite: false,
-        },
-      ]);
-
-      localStorage.setItem("boardData", JSON.stringify(updatedData));
-      push(`/board/${id}`);
+      errorName();
     }
-
-    setIsNewBoard(false);
-    setBoardName("");
   };
 
   return (
@@ -115,7 +124,6 @@ const BoardsListModal: FC<BoardsListModalProps> = ({
         />
       </div>
       <div className="round-up absolute left-[340px]"></div>
-      <div className="round-down absolute left-[340px] -bottom-[15px] bg-red-300"></div>
     </div>
   );
 };

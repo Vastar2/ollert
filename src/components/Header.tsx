@@ -8,6 +8,7 @@ import {
 import { FC, useContext } from "react";
 import { twMerge } from "tailwind-merge";
 import { ThemeContext } from "./ThemeProvider";
+import Link from "next/link";
 
 interface HeaderProps {
   isBoardsList: boolean;
@@ -36,14 +37,12 @@ const Header: FC<HeaderProps> = ({ isBoardsList, onToggleBoardsList }) => {
           </>
         )}
       </button>
-      <Image
-        src="/logo.png"
-        alt="Logo"
-        priority
-        width={100}
-        height={0}
+      <Link
         className="absolute left-1/2 -translate-x-1/2"
-      />
+        href={{ pathname: `/` }}
+      >
+        <Image src="/logo.png" alt="Logo" priority width={100} height={0} />
+      </Link>
       <div className="ml-auto">
         <button
           className={twMerge(

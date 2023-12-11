@@ -1,6 +1,7 @@
 "use client";
 import { FC, useState } from "react";
 import { MdClose } from "react-icons/md";
+import toast from "react-hot-toast";
 
 interface ModalReadAndEditTaskProps {
   newTaskStatus: null | { key: string; color: string };
@@ -25,19 +26,25 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
     { checkId: number; isChecked: boolean; content: string }[]
   >([]);
   const [checklistItem, setChecklistItem] = useState("");
-
+  const errorName = () =>
+    toast.error("The name must be at least 3 characters long");
   if (!newTaskStatus) return null;
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const id = Math.floor(Math.random() * (99999999 - 11111111 + 1)) + 11111111;
-    onSetNewTask(id, taskName, taskDescription, newTaskStatus.key, checklist);
-    setTaskName("");
-    setTaskDescription("");
-    setChecklistItem("");
-    setChecklist([]);
-    resetNewTaskStatus();
+    if (taskName.length > 2) {
+      const id =
+        Math.floor(Math.random() * (99999999 - 11111111 + 1)) + 11111111;
+      onSetNewTask(id, taskName, taskDescription, newTaskStatus.key, checklist);
+      setTaskName("");
+      setTaskDescription("");
+      setChecklistItem("");
+      setChecklist([]);
+      resetNewTaskStatus();
+    } else {
+      errorName();
+    }
   };
 
   return (

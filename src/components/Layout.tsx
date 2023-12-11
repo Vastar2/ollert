@@ -2,6 +2,7 @@ import Header from "./Header";
 import BoardsListModal from "./BoardsListModal";
 import { FC, useState } from "react";
 import ThemeProvider from "./ThemeProvider";
+import { Toaster } from "react-hot-toast";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -23,7 +24,8 @@ const Layout: FC<LayoutProps> = ({ children }) => {
             onToggleBoardsList={() => setIsBoardsList(!isBoardsList)}
           />
         )}
-      </div>
+      </div>{" "}
+      <Toaster />
     </ThemeProvider>
   );
 };
