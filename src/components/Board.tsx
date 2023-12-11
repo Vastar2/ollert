@@ -9,6 +9,7 @@ import { handleDragOver, handleDragEnd } from "../utils/index";
 import type { TTask, TBoardData, TColumn } from "../types";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import toast from "react-hot-toast";
 
 interface BoardProps {
   pathname: string;
@@ -23,6 +24,8 @@ const Board: FC<BoardProps> = ({ pathname }) => {
   } | null>(null);
   const { push } = useRouter();
   const [sortingParameter, setSortingParameter] = useState("priority");
+  const errorName = () =>
+    toast.error("The name must be at least 3 characters long");
 
   useEffect(() => {
     const storedData = localStorage.getItem("boardData");
@@ -281,13 +284,15 @@ const Board: FC<BoardProps> = ({ pathname }) => {
               )
             }
             onChangeName={(newBoardName) =>
-              setBoardData(
-                (prev: TBoardData | null) =>
-                  prev && {
-                    ...prev,
-                    boardName: newBoardName,
-                  }
-              )
+              newBoardName.length > 2
+                ? setBoardData(
+                    (prev: TBoardData | null) =>
+                      prev && {
+                        ...prev,
+                        boardName: newBoardName,
+                      }
+                  )
+                : errorName()
             }
             onAddNewColumn={handleAddNewColumn}
             onDeleteBoard={handleDeleteBoard}
@@ -296,6 +301,7 @@ const Board: FC<BoardProps> = ({ pathname }) => {
               setSortingParameter((e.target as HTMLButtonElement).id);
             }}
             columnsLength={boardData?.columns.length}
+            boardColumns={boardData.columns}
           />
           {boardData.columns.length ? (
             <DragAndDrop
@@ -381,9 +387,6 @@ const Board: FC<BoardProps> = ({ pathname }) => {
               }
           );
         }}
-        // onToggleIsChecked={(taskId, checkId) =>
-        //   setBoardData((prev: any) => prev)
-        // }
       />
       <ModalCreateTask
         newTaskStatus={newTaskStatus}

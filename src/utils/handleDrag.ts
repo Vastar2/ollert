@@ -1,5 +1,4 @@
 import { DragOverEvent, DragEndEvent } from "@dnd-kit/core";
-import { TItemField } from "../types";
 import { TTask } from "../types";
 
 type Items = Record<string, { priority: number; array: TTask[] }>;

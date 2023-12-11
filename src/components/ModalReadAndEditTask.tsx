@@ -9,6 +9,7 @@ import {
   MdCheckBox,
 } from "react-icons/md";
 import { twMerge } from "tailwind-merge";
+import toast from "react-hot-toast";
 
 interface ModalReadAndEditTaskProps {
   columns: TColumn[] | undefined;
@@ -22,7 +23,6 @@ interface ModalReadAndEditTaskProps {
     checklist: { checkId: number; isChecked: boolean; content: string }[]
   ) => void;
   onDeleteTask: (id: number, key: string) => void;
-  // onToggleIsChecked: (taskId: number, checkId: number) => void;
 }
 
 const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
@@ -31,7 +31,6 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
   resetTaskModal,
   onUpdateTask,
   onDeleteTask,
-  // onToggleIsChecked,
 }) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [editText, setEditText] = useState("");
@@ -39,6 +38,8 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
   const [editChecklist, setEditChecklist] = useState<
     { checkId: number; isChecked: boolean; content: string }[]
   >([]);
+  const errorName = () =>
+    toast.error("The name must be at least 3 characters long");
 
   useEffect(() => {
     setEditChecklist(currentTaskData?.checklist ?? []);
@@ -98,6 +99,7 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
               onChange={(e) => {
                 setEditText(e.target.value);
               }}
+              autoFocus
             />
           </label>
         ) : (
@@ -122,14 +124,17 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
           </p>
         )}
         <label className="block">
-          {isEditMode && (
+          {isEditMode && !!editChecklist.length && (
             <p className="text-sm text-lightGray mb-1">
               Checklist{" "}
               <span className="italic">({editChecklist.length} tasks)</span>
             </p>
           )}
           <ul className="mt-2">
-            {editChecklist?.map((item) => (
+            {[
+              ...editChecklist.filter((value) => !value.isChecked),
+              ...editChecklist.filter((value) => value.isChecked),
+            ]?.map((item) => (
               <li
                 key={item.checkId}
                 className={twMerge(
@@ -141,7 +146,9 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
               >
                 <button
                   type="button"
-                  onClick={() =>
+                  className="outline-none"
+                  onClick={(e) =>
+                    e.target !== e.currentTarget &&
                     onUpdateTask(
                       currentTaskData.id,
                       editText,
@@ -154,7 +161,6 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
                         )
                       ].name,
                       editChecklist.map((value) => {
-                        console.log(value, item);
                         return value.checkId === item.checkId
                           ? { ...value, isChecked: !value.isChecked }
                           : value;
@@ -165,6 +171,31 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
                   {item.isChecked ? <MdCheckBox /> : <MdCheckBoxOutlineBlank />}
                 </button>
                 <p> {item.content}</p>
+                {isEditMode && (
+                  <button
+                    className="text-xl button-small ml-auto"
+                    onClick={() =>
+                      onUpdateTask(
+                        currentTaskData.id,
+                        editText,
+                        editDescription,
+                        columns[
+                          columns.findIndex((column) =>
+                            column.array.some(
+                              (item) => item.id === currentTaskData.id
+                            )
+                          )
+                        ].name,
+                        editChecklist.filter(
+                          (value) => value.checkId !== item.checkId
+                        )
+                      )
+                    }
+                    type="button"
+                  >
+                    <MdDelete />
+                  </button>
+                )}
               </li>
             ))}
           </ul>
@@ -194,7 +225,7 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
           <button
             className="text-lg button-small ml-1"
             onClick={() => {
-              if (isEditMode) {
+              if (isEditMode && editText.length > 2) {
                 onUpdateTask(
                   currentTaskData.id,
                   editText,
@@ -208,8 +239,12 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
                   ].name,
                   editChecklist
                 );
+                setIsEditMode(!isEditMode);
+              } else if (isEditMode && editText.length < 3) {
+                errorName();
+              } else if (!isEditMode) {
+                setIsEditMode(!isEditMode);
               }
-              setIsEditMode(!isEditMode);
             }}
             type="button"
           >

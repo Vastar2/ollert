@@ -4,6 +4,7 @@ import BoardsList from "./BoardsList";
 import BoardsListNewBoard from "./BoardsListNewBoard";
 import { TBoardsListData } from "../types";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 interface BoardsListModalProps {
   isBoardsList: boolean;
@@ -20,10 +21,11 @@ const BoardsListModal: FC<BoardsListModalProps> = ({
     TBoardsListData[] | null
   >(null);
   const { push } = useRouter();
+  const errorName = () =>
+    toast.error("The name must be at least 3 characters long");
 
   useEffect(() => {
     const storedData = localStorage.getItem("boardData");
-
     setBoardsListData(
       storedData &&
         JSON.parse(storedData).map((item: TBoardsListData) => ({
@@ -44,6 +46,11 @@ const BoardsListModal: FC<BoardsListModalProps> = ({
     const id = Math.floor(Math.random() * (99999999 - 11111111 + 1)) + 11111111;
     const localData = localStorage.getItem("boardData");
 
+    if (boardName.length < 3) {
+      errorName();
+      return;
+    }
+
     if (localData) {
       const updatedData = [
         {
@@ -54,7 +61,6 @@ const BoardsListModal: FC<BoardsListModalProps> = ({
         },
         ...(Array.isArray(JSON.parse(localData)) ? JSON.parse(localData) : []),
       ];
-
       setBoardsListData(
         (prev: TBoardsListData[] | null) =>
           prev && [
@@ -66,7 +72,6 @@ const BoardsListModal: FC<BoardsListModalProps> = ({
             },
           ]
       );
-
       localStorage.setItem("boardData", JSON.stringify(updatedData));
       push(`/board/${id}`);
     } else {
@@ -78,7 +83,6 @@ const BoardsListModal: FC<BoardsListModalProps> = ({
           columns: [],
         },
       ];
-
       setBoardsListData([
         {
           boardId: id,
@@ -86,7 +90,6 @@ const BoardsListModal: FC<BoardsListModalProps> = ({
           isFavorite: false,
         },
       ]);
-
       localStorage.setItem("boardData", JSON.stringify(updatedData));
       push(`/board/${id}`);
     }
@@ -115,7 +118,6 @@ const BoardsListModal: FC<BoardsListModalProps> = ({
         />
       </div>
       <div className="round-up absolute left-[340px]"></div>
-      <div className="round-down absolute left-[340px] -bottom-[15px] bg-red-300"></div>
     </div>
   );
 };
