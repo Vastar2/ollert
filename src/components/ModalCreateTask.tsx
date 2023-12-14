@@ -2,6 +2,7 @@
 import { FC, useState } from "react";
 import { MdClose } from "react-icons/md";
 import toast from "react-hot-toast";
+import { random } from "lodash";
 
 interface ModalReadAndEditTaskProps {
   newTaskStatus: null | { key: string; color: string };
@@ -30,18 +31,21 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
     toast.error("The name must be at least 3 characters long");
   if (!newTaskStatus) return null;
 
+  const handleReset = () => {
+    setTaskName("");
+    setTaskDescription("");
+    setChecklistItem("");
+    setChecklist([]);
+    resetNewTaskStatus();
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (taskName.length > 2) {
-      const id =
-        Math.floor(Math.random() * (99999999 - 11111111 + 1)) + 11111111;
+      const id = random(999999);
       onSetNewTask(id, taskName, taskDescription, newTaskStatus.key, checklist);
-      setTaskName("");
-      setTaskDescription("");
-      setChecklistItem("");
-      setChecklist([]);
-      resetNewTaskStatus();
+      handleReset();
     } else {
       errorName();
     }
@@ -51,13 +55,7 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
     <div
       className="p-3 absolute z-50 top-0 left-0 w-full h-full bg-[#00000040] flex items-center justify-center"
       onClick={(e) => {
-        if (e.target === e.currentTarget) {
-          setTaskName("");
-          setTaskDescription("");
-          setChecklistItem("");
-          setChecklist([]);
-          resetNewTaskStatus();
-        }
+        e.target === e.currentTarget && handleReset();
       }}
     >
       <div className="basis-[640px] container-main pt-0 relative overflow-hidden">
@@ -120,10 +118,7 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
                       setChecklist([
                         ...checklist,
                         {
-                          checkId:
-                            Math.floor(
-                              Math.random() * (9999999999 - 1111111111 + 1)
-                            ) + 1111111111,
+                          checkId: random(999999),
                           isChecked: false,
                           content: checklistItem,
                         },
@@ -156,13 +151,7 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
 
         <button
           className="text-xl button-small absolute top-3 right-3"
-          onClick={() => {
-            setTaskName("");
-            setTaskDescription("");
-            setChecklistItem("");
-            setChecklist([]);
-            resetNewTaskStatus();
-          }}
+          onClick={() => handleReset()}
           type="button"
         >
           <MdClose />

@@ -2,7 +2,7 @@
 import Layout from "../src/components/Layout";
 import { useState, useEffect } from "react";
 import { TBoardsListData } from "../src/types";
-import { MdStar, MdStarBorder } from "react-icons/md";
+import { MdSdCardAlert, MdStar, MdStarBorder } from "react-icons/md";
 import Link from "next/link";
 import { MdArrowForwardIos, MdHistory } from "react-icons/md";
 
@@ -31,18 +31,50 @@ const App = () => {
           {boardsListData?.length ? (
             <ul className="overflow-auto">
               {boardsListData?.map((item) => (
-                <li key={item.boardId}>
+                <li key={item.boardId} className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const storedData = localStorage.getItem("boardData");
+                      setBoardsListData((prev) =>
+                        prev
+                          ? prev.map((value) =>
+                              value.boardId === item.boardId
+                                ? { ...value, isFavorite: !value.isFavorite }
+                                : value
+                            )
+                          : null
+                      );
+                      localStorage.setItem(
+                        "boardData",
+                        JSON.stringify(
+                          storedData
+                            ? [
+                                ...JSON.parse(storedData)?.map((value: any) =>
+                                  value.boardId === item.boardId
+                                    ? {
+                                        ...value,
+                                        isFavorite: !value.isFavorite,
+                                      }
+                                    : value
+                                ),
+                              ]
+                            : null
+                        )
+                      );
+                    }}
+                    className="mr-2"
+                  >
+                    {item.isFavorite ? (
+                      <MdStar className="text-2xl text-[orange]" />
+                    ) : (
+                      <MdStarBorder className="text-2xl" />
+                    )}
+                  </button>
                   <Link
-                    className="px-4 py-2 rounded-custom group duration-300 hover:bg-darkWhite flex items-center h-full"
+                    className="px-4 py-2 flex-grow rounded-custom group duration-300 hover:bg-darkWhite flex items-center h-full"
                     href={{ pathname: `/board/${item.boardId}` }}
                   >
-                    <div className="mr-2">
-                      {item.isFavorite ? (
-                        <MdStar className="text-2xl text-[orange]" />
-                      ) : (
-                        <MdStarBorder className="text-2xl" />
-                      )}
-                    </div>
                     <p>{item.boardName}</p>
                     <MdArrowForwardIos className="ml-auto opacity-0 duration-300 text-lightGray group-hover:opacity-100" />
                   </Link>

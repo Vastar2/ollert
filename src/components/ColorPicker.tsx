@@ -21,12 +21,6 @@ const ColorPicker: FC<ColorPickerProps> = ({
   );
   const [newColumnColor, setNewColumnColor] = useState("#EE4B4B");
 
-  console.log(
-    columns,
-    name,
-    columns?.filter((item) => item.name === name)[0]?.color
-  );
-
   return (
     <div className="relative">
       <div
