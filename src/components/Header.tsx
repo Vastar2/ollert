@@ -41,18 +41,22 @@ const Header: FC<HeaderProps> = ({ isBoardsList, onToggleBoardsList }) => {
         className="absolute left-1/2 -translate-x-1/2"
         href={{ pathname: `/` }}
       >
-        <Image src="/logo.png" alt="Logo" priority width={100} height={0} />
+        <Image src="/logo.png" alt="Logo" priority width="100" height="30" />
       </Link>
       <div className="ml-auto">
         <button
           className={twMerge(
-            theme?.isLightTheme ? "text-[orange]" : "text-accent",
+            theme?.currentTheme === "light" ? "text-[orange]" : "text-accent",
             "button-small text-xl w-10 h-10"
           )}
           type="button"
-          onClick={() => theme?.setIsLightTheme(!theme?.isLightTheme)}
+          onClick={() =>
+            theme?.setCurrentTheme(
+              theme?.currentTheme === "light" ? "dark" : "light"
+            )
+          }
         >
-          {theme?.isLightTheme ? <MdSunny /> : <MdNightlight />}
+          {theme?.currentTheme === "light" ? <MdSunny /> : <MdNightlight />}
         </button>
       </div>
     </div>

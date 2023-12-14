@@ -31,25 +31,14 @@ const SortableList: FC<SortableListProps> = ({
         items={items}
         strategy={verticalListSortingStrategy}
       >
-        {!items.length ? (
-          <div ref={setNodeRef}>
-            <ListOfItems
-              items={items}
-              id={id}
-              columns={columns}
-              onSetCurrentTaskData={onSetCurrentTaskData}
-            />
-          </div>
-        ) : (
-          <>
-            <ListOfItems
-              items={items}
-              id={id}
-              columns={columns}
-              onSetCurrentTaskData={onSetCurrentTaskData}
-            />
-          </>
-        )}
+        <div ref={!items.length ? setNodeRef : null}>
+          <ListOfItems
+            items={items}
+            id={id}
+            columns={columns}
+            onSetCurrentTaskData={onSetCurrentTaskData}
+          />
+        </div>
       </SortableContext>
     </ul>
   );

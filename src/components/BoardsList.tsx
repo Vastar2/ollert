@@ -1,6 +1,7 @@
 import { MdArrowRightAlt } from "react-icons/md";
 import { FC } from "react";
 import BoardsHalfList from "./BoardsHalfList";
+import { TBoardsListData } from "../types";
 
 interface BoardsListProps {
   boardsListData:
@@ -10,9 +11,15 @@ interface BoardsListProps {
         isFavorite: boolean;
       }[]
     | null;
+  setBoardsListData: React.Dispatch<
+    React.SetStateAction<TBoardsListData[] | null>
+  >;
 }
 
-const BoardsList: FC<BoardsListProps> = ({ boardsListData }) => {
+const BoardsList: FC<BoardsListProps> = ({
+  boardsListData,
+  setBoardsListData,
+}) => {
   return (
     <div className="w-[340px] h-[calc(100vh-70px)] pl-6 container-main rounded-none">
       {boardsListData?.length ? (
@@ -24,10 +31,15 @@ const BoardsList: FC<BoardsListProps> = ({ boardsListData }) => {
               <BoardsHalfList
                 boardsListData={boardsListData}
                 isFavorite={false}
+                setBoardsListData={setBoardsListData}
               />
             </>
           )}
-          <BoardsHalfList boardsListData={boardsListData} isFavorite={true} />
+          <BoardsHalfList
+            boardsListData={boardsListData}
+            isFavorite={true}
+            setBoardsListData={setBoardsListData}
+          />
         </>
       ) : (
         <div className="pt-16">

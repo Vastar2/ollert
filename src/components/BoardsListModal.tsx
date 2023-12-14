@@ -5,6 +5,7 @@ import BoardsListNewBoard from "./BoardsListNewBoard";
 import { TBoardsListData } from "../types";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { random } from "lodash";
 
 interface BoardsListModalProps {
   isBoardsList: boolean;
@@ -43,7 +44,8 @@ const BoardsListModal: FC<BoardsListModalProps> = ({
 
   const handleAddBoard = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const id = Math.floor(Math.random() * (99999999 - 11111111 + 1)) + 11111111;
+
+    const id = random(999999);
     const localData = localStorage.getItem("boardData");
 
     if (boardName.length < 3) {
@@ -108,7 +110,10 @@ const BoardsListModal: FC<BoardsListModalProps> = ({
       }}
     >
       <div className="absolute top-0 left-0 pr-2 overflow-hidden flex">
-        <BoardsList boardsListData={boardsListData} />
+        <BoardsList
+          boardsListData={boardsListData}
+          setBoardsListData={setBoardsListData}
+        />
         <BoardsListNewBoard
           isNewBoard={isNewBoard}
           onAddBoard={(e) => handleAddBoard(e)}

@@ -131,10 +131,7 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
             </p>
           )}
           <ul className="mt-2">
-            {[
-              ...editChecklist.filter((value) => !value.isChecked),
-              ...editChecklist.filter((value) => value.isChecked),
-            ]?.map((item) => (
+            {editChecklist?.map((item) => (
               <li
                 key={item.checkId}
                 className={twMerge(

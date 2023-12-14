@@ -1,8 +1,8 @@
 import { FC, useState, useEffect, createContext } from "react";
 
 export const ThemeContext = createContext<null | {
-  isLightTheme: boolean | null;
-  setIsLightTheme: React.Dispatch<React.SetStateAction<boolean | null>>;
+  currentTheme: string | null;
+  setCurrentTheme: React.Dispatch<React.SetStateAction<string | null>>;
 }>(null);
 
 interface ThemeProviderProps {
@@ -10,26 +10,29 @@ interface ThemeProviderProps {
 }
 
 const ThemeProvider: FC<ThemeProviderProps> = ({ children }) => {
-  const [isLightTheme, setIsLightTheme] = useState<boolean | null>(null);
+  const [currentTheme, setCurrentTheme] = useState<string | null>(null);
 
   useEffect(() => {
     const localTheme = localStorage.getItem("theme");
-    if (localTheme === "true" || localTheme === "false") {
-      setIsLightTheme(localTheme === "true");
+    if (localTheme) {
+      setCurrentTheme(localTheme);
     } else {
-      setIsLightTheme(true);
+      setCurrentTheme("light");
     }
   }, []);
 
   useEffect(() => {
-    if (isLightTheme !== null) {
-      document.documentElement.classList.toggle("dark", !isLightTheme);
-      localStorage.setItem("theme", JSON.stringify(isLightTheme));
+    if (currentTheme !== null) {
+      document.documentElement.classList.toggle(
+        "dark",
+        currentTheme === "dark"
+      );
+      localStorage.setItem("theme", currentTheme);
     }
-  }, [isLightTheme]);
+  }, [currentTheme]);
 
   return (
-    <ThemeContext.Provider value={{ isLightTheme, setIsLightTheme }}>
+    <ThemeContext.Provider value={{ currentTheme, setCurrentTheme }}>
       {children}
     </ThemeContext.Provider>
   );
