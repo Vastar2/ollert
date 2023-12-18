@@ -311,32 +311,37 @@ const Board: FC<BoardProps> = ({ pathname }) => {
               onSetCurrentTaskData={(taskData, color) =>
                 taskData && setCurrentTaskData({ ...taskData, color })
               }
-              onChangeResultArray={(newArray) =>
-                setBoardData(
-                  (prev: TBoardData | null) =>
-                    prev && {
-                      ...prev,
-                      columns: prev.columns.map((item) => {
-                        const resultArray = newArray
-                          .map((value: any) =>
-                            value.array.some(
-                              (parameter: any) => parameter.status === item.name
-                            )
-                              ? [...value.array]
-                              : null
-                          )
-                          .filter(
-                            (parameter: any) => parameter !== null && parameter
-                          );
-
-                        return {
-                          ...item,
-                          array: resultArray[0] || [],
-                        };
-                      }),
-                    }
-                )
-              }
+              onChangeResultArray={(newArray) => {
+                setTimeout(
+                  () =>
+                    setBoardData(
+                      (prev: TBoardData | null) =>
+                        prev && {
+                          ...prev,
+                          columns: prev.columns.map((item) => {
+                            const resultArray = newArray
+                              .map((value: any) =>
+                                value.array.some(
+                                  (parameter: any) =>
+                                    parameter.status === item.name
+                                )
+                                  ? [...value.array]
+                                  : null
+                              )
+                              .filter(
+                                (parameter: any) =>
+                                  parameter !== null && parameter
+                              );
+                            return {
+                              ...item,
+                              array: resultArray[0] || [],
+                            };
+                          }),
+                        }
+                    ),
+                  0
+                );
+              }}
               onNewtask={(key, color) => setNewTaskStatus({ key, color })}
               onDeleteColumn={handleDeleteColumn}
               onChangeColumnColor={handleChangeColumnColor}

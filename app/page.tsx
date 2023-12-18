@@ -2,7 +2,7 @@
 import Layout from "../src/components/Layout";
 import { useState, useEffect } from "react";
 import { TBoardsListData } from "../src/types";
-import { MdSdCardAlert, MdStar, MdStarBorder } from "react-icons/md";
+import { MdStar, MdStarBorder } from "react-icons/md";
 import Link from "next/link";
 import { MdArrowForwardIos, MdHistory } from "react-icons/md";
 
