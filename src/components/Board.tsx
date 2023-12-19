@@ -95,6 +95,21 @@ const Board: FC<BoardProps> = ({ pathname }) => {
         }
     );
 
+  const handleAddLabel = (newLabelName: string) =>
+    setBoardData(
+      (prev: TBoardData | null) =>
+        prev && {
+          ...prev,
+          labels: [
+            ...prev.labels,
+            {
+              name: newLabelName,
+              color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
+            },
+          ],
+        }
+    );
+
   const handleDeleteBoard = (boardId: number) => {
     const localData = localStorage.getItem("boardData");
     if (localData) {
@@ -189,7 +204,11 @@ const Board: FC<BoardProps> = ({ pathname }) => {
     taskName: string,
     taskDescription: string,
     status: string,
-    checklist: { checkId: number; isChecked: boolean; content: string }[]
+    checklist: { checkId: number; isChecked: boolean; content: string }[],
+    newLabels: {
+      name: string;
+      color: string;
+    }[]
   ) => {
     setBoardData(
       (prev: TBoardData | null) =>
@@ -227,6 +246,7 @@ const Board: FC<BoardProps> = ({ pathname }) => {
                   description: taskDescription,
                   status,
                   checklist,
+                  labels: newLabels,
                 },
                 ...prev.columns[
                   prev.columns.findIndex((column) =>
@@ -274,6 +294,7 @@ const Board: FC<BoardProps> = ({ pathname }) => {
             isFavorite={boardData?.isFavorite}
             boardName={boardData?.boardName}
             boardId={boardData?.boardId}
+            boardLabels={boardData?.labels}
             onToggleFavorite={() =>
               setBoardData(
                 (prev: TBoardData | null) =>
@@ -295,6 +316,7 @@ const Board: FC<BoardProps> = ({ pathname }) => {
                 : errorName()
             }
             onAddNewColumn={handleAddNewColumn}
+            onAddLabel={handleAddLabel}
             onDeleteBoard={handleDeleteBoard}
             sortingParameter={sortingParameter}
             onSetSortingParameter={(e) => {
@@ -396,7 +418,14 @@ const Board: FC<BoardProps> = ({ pathname }) => {
       <ModalCreateTask
         newTaskStatus={newTaskStatus}
         resetNewTaskStatus={() => setNewTaskStatus(null)}
-        onSetNewTask={(id, taskName, taskDescription, key, checklist) =>
+        onSetNewTask={(
+          id,
+          taskName,
+          taskDescription,
+          key,
+          checklist,
+          newLabels
+        ) =>
           setBoardData(
             (prev: TBoardData | null) =>
               prev && {
@@ -414,6 +443,7 @@ const Board: FC<BoardProps> = ({ pathname }) => {
                               description: taskDescription,
                               status: key,
                               checklist: checklist,
+                              labels: newLabels,
                             },
                           ],
                         }
@@ -423,6 +453,7 @@ const Board: FC<BoardProps> = ({ pathname }) => {
               }
           )
         }
+        boardLabels={boardData?.labels}
       />
     </>
   );

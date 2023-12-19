@@ -1,7 +1,7 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { FC } from "react";
-import { TItemField, TTask, TColumn } from "../types";
+import { TTask, TColumn } from "../types";
 import { twMerge } from "tailwind-merge";
 import { RxDragHandleDots1 } from "react-icons/rx";
 
@@ -51,22 +51,19 @@ const SortableItem: FC<SortableItemProps> = ({
       <p className="font-semibold text-lg whitespace-nowrap text-ellipsis overflow-hidden w-[210px]">
         {item.title}
       </p>
-      <span
-        className={`inline-block font-normal rounded-custom px-1.5 py-1 text-xs mb-2`}
-        style={{
-          backgroundColor: `${
-            columns.filter((item) => item.name === id)[0]?.color
-          }30`,
-        }}
-      >
-        {
-          columns[
-            columns.findIndex((column) =>
-              column.array.some((value) => value.id === item.id)
-            )
-          ]?.name
-        }
-      </span>
+      <ul className="flex flex-wrap gap-1">
+        {item.labels.map((value, index) => (
+          <li
+            key={index}
+            className={`inline-block font-normal rounded-custom px-1.5 py-1 text-xs mb-2`}
+            style={{
+              backgroundColor: `${value.color}30`,
+            }}
+          >
+            {value.name}
+          </li>
+        ))}
+      </ul>
       <p
         className="text-base text-halfLightGray h-[48px] text-ellipsis overflow-hidden"
         style={{

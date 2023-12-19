@@ -3,6 +3,8 @@ import { FC, useState } from "react";
 import { MdClose } from "react-icons/md";
 import toast from "react-hot-toast";
 import { random } from "lodash";
+import { MdKeyboardArrowDown } from "react-icons/md";
+import { twMerge } from "tailwind-merge";
 
 interface ModalReadAndEditTaskProps {
   newTaskStatus: null | { key: string; color: string };
@@ -12,14 +14,17 @@ interface ModalReadAndEditTaskProps {
     taskName: string,
     taskDescription: string,
     key: string,
-    checklist: { checkId: number; isChecked: boolean; content: string }[]
+    checklist: { checkId: number; isChecked: boolean; content: string }[],
+    newLabels: { name: string; color: string }[]
   ) => void;
+  boardLabels: { name: string; color: string }[] | undefined;
 }
 
 const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
   newTaskStatus,
   resetNewTaskStatus,
   onSetNewTask,
+  boardLabels,
 }) => {
   const [taskName, setTaskName] = useState("");
   const [taskDescription, setTaskDescription] = useState("");
@@ -27,6 +32,10 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
     { checkId: number; isChecked: boolean; content: string }[]
   >([]);
   const [checklistItem, setChecklistItem] = useState("");
+  const [isLabels, setIsLabels] = useState(false);
+  const [newLabels, setNewLabels] = useState<{ name: string; color: string }[]>(
+    []
+  );
   const errorName = () =>
     toast.error("The name must be at least 3 characters long");
   if (!newTaskStatus) return null;
@@ -37,6 +46,8 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
     setChecklistItem("");
     setChecklist([]);
     resetNewTaskStatus();
+    setIsLabels(false);
+    setNewLabels([]);
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -44,7 +55,14 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
 
     if (taskName.length > 2) {
       const id = random(999999);
-      onSetNewTask(id, taskName, taskDescription, newTaskStatus.key, checklist);
+      onSetNewTask(
+        id,
+        taskName,
+        taskDescription,
+        newTaskStatus.key,
+        checklist,
+        newLabels
+      );
       handleReset();
     } else {
       errorName();
@@ -58,7 +76,7 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
         e.target === e.currentTarget && handleReset();
       }}
     >
-      <div className="basis-[640px] container-main pt-0 relative overflow-hidden">
+      <div className="basis-[440px] container-main pt-0 relative overflow-hidden">
         <div
           className="w-1/2 h-2 ml-auto mr-auto rounded-b-custom"
           style={{
@@ -81,7 +99,7 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
             <label>
               <p className="text-sm text-lightGray">Task name</p>
               <input
-                className="mt-1 input-main max-w-[200px]"
+                className="mt-1 input-main"
                 type="text"
                 value={taskName}
                 onChange={(e) => setTaskName(e.target.value)}
@@ -93,7 +111,7 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
             <label>
               <p className="text-sm text-lightGray">Task description</p>
               <textarea
-                className="mt-1 h-[140px] resize-none input-main"
+                className="mt-1 h-[80px] resize-none input-main"
                 value={taskDescription}
                 onChange={(e) => setTaskDescription(e.target.value)}
               />
@@ -104,7 +122,7 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
               <p className="text-sm text-lightGray">Checklist</p>
               <div className="mt-1 flex gap-2">
                 <input
-                  className="input-main max-w-[200px]"
+                  className="input-main"
                   type="text"
                   value={checklistItem}
                   onChange={(e) => setChecklistItem(e.target.value)}
@@ -139,6 +157,66 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
                   </li>
                 ))}
               </ul>
+            </label>
+          </div>
+          <div className="relative mb-4">
+            <label className="mt-2">
+              <p className="text-sm text-lightGray mb-2">Labels</p>
+              <button
+                onClick={() => {
+                  setIsLabels(!isLabels);
+                }}
+                type="button"
+                className="w-full mb-2 duration-300 hover:bg-darkWhite flex items-center py-2 px-4 rounded-custom"
+              >
+                <MdKeyboardArrowDown
+                  className={twMerge(
+                    isLabels ? "rotate-0" : "rotate-180",
+                    "text-lightGray mr-1 duration-300 w-6 h-6 flex justify-center items-center text-4xl"
+                  )}
+                />
+                <p>Labels</p>
+              </button>
+              {isLabels && (
+                <div className="mb-4 container-main w-full p-0">
+                  {!!boardLabels?.length && (
+                    <ul className="flex flex-wrap gap-1">
+                      {boardLabels?.map((item, index) => (
+                        <li
+                          key={index}
+                          className={`text-center border-[2px] last-of-type:mb-0 px-1 rounded-custom max-w-[128px] truncate`}
+                          style={{ borderColor: item.color }}
+                        >
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setNewLabels((prev) => [...prev, item]);
+                              setIsLabels(false);
+                            }}
+                          >
+                            {item.name}
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              )}
+              {!!newLabels.length ? (
+                <ul className="mb-2 flex flex-wrap gap-1 border border-lightGray dark:bg-darkWhite text-mainGray p-2 rounded-custom">
+                  {newLabels.map((item, index) => (
+                    <li
+                      key={index}
+                      className={`text-center last-of-type:mb-0 bgc-[${item.color}] px-1 rounded-custom max-w-[128px] truncate`}
+                      style={{ background: item.color }}
+                    >
+                      {item.name}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-sm text-lightGray">Add some labels</p>
+              )}
             </label>
           </div>
           <button

@@ -59,6 +59,7 @@ const BoardsListModal: FC<BoardsListModalProps> = ({
           boardId: id,
           boardName: boardName,
           isFavorite: false,
+          labels: [],
           columns: [],
         },
         ...(Array.isArray(JSON.parse(localData)) ? JSON.parse(localData) : []),
@@ -82,6 +83,7 @@ const BoardsListModal: FC<BoardsListModalProps> = ({
           boardId: id,
           boardName: boardName,
           isFavorite: false,
+          labels: [],
           columns: [],
         },
       ];

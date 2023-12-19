@@ -82,11 +82,13 @@ const App = () => {
               ))}
             </ul>
           ) : (
-            <div className="container-main w-[30%] flex items-center justify-center">
-              <MdHistory className="text-lightGray mr-2" />
-              <p className="text-center text-lightGray">
-                List of boards is clear
-              </p>
+            <div className="h-full flex justify-center items-center">
+              <div className="flex items-center justify-center">
+                <MdHistory className="text-lightGray mr-2" />
+                <p className="text-center text-lightGray">
+                  List of boards is clear
+                </p>
+              </div>
             </div>
           )}
         </div>
