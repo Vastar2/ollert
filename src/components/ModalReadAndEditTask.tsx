@@ -20,7 +20,11 @@ interface ModalReadAndEditTaskProps {
     editText: string,
     editDescription: string,
     status: string,
-    checklist: { checkId: number; isChecked: boolean; content: string }[]
+    checklist: { checkId: number; isChecked: boolean; content: string }[],
+    newLabels: {
+      name: string;
+      color: string;
+    }[]
   ) => void;
   onDeleteTask: (id: number, key: string) => void;
 }
@@ -161,7 +165,8 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
                         return value.checkId === item.checkId
                           ? { ...value, isChecked: !value.isChecked }
                           : value;
-                      })
+                      }),
+                      currentTaskData.labels
                     )
                   }
                 >
@@ -185,7 +190,8 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
                         ].name,
                         editChecklist.filter(
                           (value) => value.checkId !== item.checkId
-                        )
+                        ),
+                        currentTaskData.labels
                       )
                     }
                     type="button"
@@ -234,7 +240,8 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
                       )
                     )
                   ].name,
-                  editChecklist
+                  editChecklist,
+                  currentTaskData.labels
                 );
                 setIsEditMode(!isEditMode);
               } else if (isEditMode && editText.length < 3) {

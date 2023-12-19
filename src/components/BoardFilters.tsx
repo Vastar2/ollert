@@ -1,6 +1,7 @@
 import { FC, useState } from "react";
 import BoardFiltersTitle from "./BoardFiltersTitle";
 import BoardFiltersTitleNewColumn from "./BoardFiltersTitleNewColumn";
+import Labels from "./Labels";
 import { twMerge } from "tailwind-merge";
 import { TColumn } from "../types";
 
@@ -8,9 +9,11 @@ interface BoardFiltersProps {
   isFavorite: boolean | undefined;
   boardName: string | undefined;
   boardId: number;
+  boardLabels: { name: string; color: string }[];
   onToggleFavorite: () => void;
   onChangeName: (newBoardName: string) => void;
   onAddNewColumn: (newColumnName: string, newColumnColor: string) => void;
+  onAddLabel: (newLabelName: string) => void;
   onDeleteBoard: (boardId: number) => void;
   sortingParameter: string;
   onSetSortingParameter: (e: any) => void;
@@ -22,9 +25,11 @@ const BoardFilters: FC<BoardFiltersProps> = ({
   isFavorite,
   boardName,
   boardId,
+  boardLabels,
   onToggleFavorite,
   onChangeName,
   onAddNewColumn,
+  onAddLabel,
   onDeleteBoard,
   sortingParameter,
   onSetSortingParameter,
@@ -34,7 +39,7 @@ const BoardFilters: FC<BoardFiltersProps> = ({
   const [editedBoardName, setEditedBoardName] = useState("");
 
   return (
-    <div className="container-main max-w-[640px] ml-auto mr-auto flex items-center justify-between h-[70px] mb-3">
+    <div className="container-main max-w-[800px] ml-auto mr-auto flex items-center justify-between h-[70px] mb-3">
       <BoardFiltersTitle
         onToggleFavorite={onToggleFavorite}
         isFavorite={isFavorite}
@@ -71,6 +76,7 @@ const BoardFilters: FC<BoardFiltersProps> = ({
           </button>
         </div>
       )}
+      <Labels boardLabels={boardLabels} onAddLabel={onAddLabel} />
       <BoardFiltersTitleNewColumn
         onAddNewColumn={onAddNewColumn}
         boardColumns={boardColumns}

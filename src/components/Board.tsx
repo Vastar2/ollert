@@ -95,6 +95,21 @@ const Board: FC<BoardProps> = ({ pathname }) => {
         }
     );
 
+  const handleAddLabel = (newLabelName: string) =>
+    setBoardData(
+      (prev: TBoardData | null) =>
+        prev && {
+          ...prev,
+          labels: [
+            ...prev.labels,
+            {
+              name: newLabelName,
+              color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
+            },
+          ],
+        }
+    );
+
   const handleDeleteBoard = (boardId: number) => {
     const localData = localStorage.getItem("boardData");
     if (localData) {
@@ -189,7 +204,11 @@ const Board: FC<BoardProps> = ({ pathname }) => {
     taskName: string,
     taskDescription: string,
     status: string,
-    checklist: { checkId: number; isChecked: boolean; content: string }[]
+    checklist: { checkId: number; isChecked: boolean; content: string }[],
+    newLabels: {
+      name: string;
+      color: string;
+    }[]
   ) => {
     setBoardData(
       (prev: TBoardData | null) =>
@@ -227,6 +246,7 @@ const Board: FC<BoardProps> = ({ pathname }) => {
                   description: taskDescription,
                   status,
                   checklist,
+                  labels: newLabels,
                 },
                 ...prev.columns[
                   prev.columns.findIndex((column) =>
@@ -274,6 +294,7 @@ const Board: FC<BoardProps> = ({ pathname }) => {
             isFavorite={boardData?.isFavorite}
             boardName={boardData?.boardName}
             boardId={boardData?.boardId}
+            boardLabels={boardData?.labels}
             onToggleFavorite={() =>
               setBoardData(
                 (prev: TBoardData | null) =>
@@ -295,6 +316,7 @@ const Board: FC<BoardProps> = ({ pathname }) => {
                 : errorName()
             }
             onAddNewColumn={handleAddNewColumn}
+            onAddLabel={handleAddLabel}
             onDeleteBoard={handleDeleteBoard}
             sortingParameter={sortingParameter}
             onSetSortingParameter={(e) => {
@@ -311,32 +333,37 @@ const Board: FC<BoardProps> = ({ pathname }) => {
               onSetCurrentTaskData={(taskData, color) =>
                 taskData && setCurrentTaskData({ ...taskData, color })
               }
-              onChangeResultArray={(newArray) =>
-                setBoardData(
-                  (prev: TBoardData | null) =>
-                    prev && {
-                      ...prev,
-                      columns: prev.columns.map((item) => {
-                        const resultArray = newArray
-                          .map((value: any) =>
-                            value.array.some(
-                              (parameter: any) => parameter.status === item.name
-                            )
-                              ? [...value.array]
-                              : null
-                          )
-                          .filter(
-                            (parameter: any) => parameter !== null && parameter
-                          );
-
-                        return {
-                          ...item,
-                          array: resultArray[0] || [],
-                        };
-                      }),
-                    }
-                )
-              }
+              onChangeResultArray={(newArray) => {
+                setTimeout(
+                  () =>
+                    setBoardData(
+                      (prev: TBoardData | null) =>
+                        prev && {
+                          ...prev,
+                          columns: prev.columns.map((item) => {
+                            const resultArray = newArray
+                              .map((value: any) =>
+                                value.array.some(
+                                  (parameter: any) =>
+                                    parameter.status === item.name
+                                )
+                                  ? [...value.array]
+                                  : null
+                              )
+                              .filter(
+                                (parameter: any) =>
+                                  parameter !== null && parameter
+                              );
+                            return {
+                              ...item,
+                              array: resultArray[0] || [],
+                            };
+                          }),
+                        }
+                    ),
+                  0
+                );
+              }}
               onNewtask={(key, color) => setNewTaskStatus({ key, color })}
               onDeleteColumn={handleDeleteColumn}
               onChangeColumnColor={handleChangeColumnColor}
@@ -391,7 +418,14 @@ const Board: FC<BoardProps> = ({ pathname }) => {
       <ModalCreateTask
         newTaskStatus={newTaskStatus}
         resetNewTaskStatus={() => setNewTaskStatus(null)}
-        onSetNewTask={(id, taskName, taskDescription, key, checklist) =>
+        onSetNewTask={(
+          id,
+          taskName,
+          taskDescription,
+          key,
+          checklist,
+          newLabels
+        ) =>
           setBoardData(
             (prev: TBoardData | null) =>
               prev && {
@@ -409,6 +443,7 @@ const Board: FC<BoardProps> = ({ pathname }) => {
                               description: taskDescription,
                               status: key,
                               checklist: checklist,
+                              labels: newLabels,
                             },
                           ],
                         }
@@ -418,6 +453,7 @@ const Board: FC<BoardProps> = ({ pathname }) => {
               }
           )
         }
+        boardLabels={boardData?.labels}
       />
     </>
   );

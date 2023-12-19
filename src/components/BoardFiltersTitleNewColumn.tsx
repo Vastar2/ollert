@@ -41,7 +41,7 @@ const BoardFiltersTitleNewColumn: FC<BoardFiltersTitleNewColumnProps> = ({
         />
       </button>
       {newColumnName !== null && (
-        <div className="absolute mt-6 container-main z-50 w-[220px] -right-4">
+        <div className="absolute mt-6 container-main z-50 w-[200px] -right-4">
           <label className="block mb-3">
             <p className="text-sm text-lightGray mb-2">Column name</p>
             <input

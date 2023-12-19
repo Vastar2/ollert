@@ -1,9 +1,15 @@
 export type TItemField = Exclude<keyof TTask, "id">;
 
+export interface TLable {
+  name: string;
+  color: string;
+}
+
 export interface TBoardData {
   boardId: number;
   boardName: string;
   isFavorite: boolean;
+  labels: TLable[];
   columns: TColumn[];
 }
 
@@ -19,6 +25,7 @@ export interface TTask {
   title: string;
   description: string;
   checklist: { checkId: number; isChecked: boolean; content: string }[];
+  labels: TLable[];
   color?: string;
   status?: string;
 }

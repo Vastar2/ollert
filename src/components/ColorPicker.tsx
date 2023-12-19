@@ -63,7 +63,7 @@ const ColorPicker: FC<ColorPickerProps> = ({
               setKeyOfEditingColumn(null);
               setNewColumnColor("#EE4B4B");
             }}
-            className="relative -left-1/3 text-lg button-small bg-white h-[38px] w-[38px] border border-1 border-superLightGray"
+            className="relative -left-1/3 text-lg button-small bg-mainWhite h-[38px] w-[38px] border border-1 border-superLightGray"
             type="button"
           >
             <MdOutlineDone className="text-accent" />
