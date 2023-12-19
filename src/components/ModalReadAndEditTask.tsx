@@ -111,6 +111,19 @@ const ModalReadAndEditTask: FC<ModalReadAndEditTaskProps> = ({
             {currentTaskData.title}
           </p>
         )}
+        <ul className="flex flex-wrap gap-1">
+          {currentTaskData.labels?.map((value, index) => (
+            <li
+              key={index}
+              className={`inline-block font-normal rounded-custom px-1.5 py-1 text-xs mb-2`}
+              style={{
+                backgroundColor: `${value.color}30`,
+              }}
+            >
+              {value.name}
+            </li>
+          ))}
+        </ul>
         {isEditMode ? (
           <label className="block  mb-3">
             <p className="text-sm text-lightGray mb-1">Description</p>

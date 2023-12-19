@@ -41,7 +41,7 @@ const Labels: FC<LabelsProps> = ({ boardLabels, onAddLabel }) => {
               {boardLabels.map((item, index) => (
                 <li
                   key={index}
-                  className={`text-center last-of-type:mb-0 bgc-[${item.color}] px-1 rounded-custom max-w-[128px] truncate`}
+                  className={`text-center last-of-type:mb-0 bgc-[${item.color}] px-2 text-white rounded-custom max-w-[128px] truncate`}
                   style={{ background: item.color }}
                 >
                   {item.name}
